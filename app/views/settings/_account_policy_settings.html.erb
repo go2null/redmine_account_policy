@@ -1,0 +1,16 @@
+<p>
+	<label><%= l(:rpp_setting_password_max_age) =%></label>
+	<%= text_field_tag 'settings[password_max_age]', @settings[:password_max_age], size: 6 %>
+	<%= l(:label_day_plural) %>
+</p>
+
+<p>
+	<label><%= l(:rpp_setting_unused_account_max_age) =%></label>
+	<%= text_field_tag 'settings[unused_account_max_age]', @settings[:unused_account_max_age], size: 6 %>
+	<%= l(:label_day_plural) %>
+</p>
+
+<p>
+	<label><%= l(:rpp_setting_account_policy_checked_on) =%></label>
+	<%= @settings[:account_policy_checked_on] %>
+</p>

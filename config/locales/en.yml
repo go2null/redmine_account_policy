@@ -1,0 +1,6 @@
+# English strings go here for Rails i18n
+en:
+  rpp_notice_password_expired: 'Your password has expired.'
+  rpp_setting_account_policy_checked_on: 'Password policy last checked on'
+  rpp_setting_password_max_age: 'Password maximum lifetime'
+  rpp_setting_unused_account_max_age: 'Lock accounts not used for'
