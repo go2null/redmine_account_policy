@@ -18,14 +18,14 @@ module RedmineAccountPolicy
 				# enable must_change_passwd for all expired users.
 				def expire_old_passwords!
 					User.where(type: 'User', must_change_passwd: false).each do |user|
-						user.must_change_passwd = true if user.password_expired?
+						user.update_attribute(:must_change_passwd, true) if user.password_expired?
 					end
 				end
 
 				def lock_unused_accounts!
 					User.where(type: 'User', status: [User::STATUS_REGISTERED, User::STATUS_ACTIVE]).each do |user|
 						if user.account_unused?
-							user.must_change_passwd = true
+							user.update_attribute(:must_change_passwd, true) if user.password_expired?
 							user.lock!
 						end
 					end
