@@ -11,6 +11,52 @@
 </p>
 
 <p>
+	<label><%= l(:rpp_setting_timeout_options) =%></label>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_max_login_fails) =%></small></label>
+	<%= text_field_tag 'settings[max_login_fails]', @settings[:max_login_fails], size: 6 %>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_user_timeout_in_minutes) =%></small></label>
+	<%= text_field_tag 'settings[user_timeout_in_minutes]', @settings[:user_timeout_in_minutes], size: 5 %>
+	<%= l(:rpp_setting_minute_plural) %>
+</p>
+
+
+<p>
+	<label><%= l(:rpp_setting_email_notifications) =%></label>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_notify_on_each_fail) =%></small></label>
+	<%= check_box_tag 'settings[email_notify_on_each_fail]', params[:email_notify_on_each_fail], @settings[:email_notify_on_each_fail] %>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_notify_on_max_fails) =%></small></label>
+	<%= check_box_tag 'settings[email_notify_on_max_fails]', params[:email_notify_on_max_fails], @settings[:email_notify_on_max_fails] %>
+</p>
+<p>
+	<label><small><i><%= l(:rpp_setting_admin_notification_text) =%></i></small><label>
+</p>
+
+<p>
 	<label><%= l(:rpp_setting_account_policy_checked_on) =%></label>
 	<%= @settings[:account_policy_checked_on] %>
 </p>
+<%puts Setting.plugin_redmine_account_policy[:password_max_age]%>
+<%puts Setting.plugin_redmine_account_policy[:unused_account_max_age]%>
+<%puts Setting.plugin_redmine_account_policy[:max_login_fails]%>
+<%puts Setting.plugin_redmine_account_policy[:user_timeout_in_minutes]%>
+<%if Setting.plugin_redmine_account_policy[:email_notify_on_each_fail].blank?%>
+<%puts "ITS BLANK"%>
+<%else%>
+<%puts Setting.plugin_redmine_account_policy[:email_notify_on_each_fail]%>
+<%end%>
+<%puts Setting.plugin_redmine_account_policy[:email_notify_on_max_fails]%>
+<%puts "BIIIIG BOOP"%>
+
+<%puts %>

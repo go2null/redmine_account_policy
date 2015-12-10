@@ -20,6 +20,11 @@ Redmine::Plugin.register :redmine_account_policy do
 	settings :default => {
 		password_max_age: '90',
 		unused_account_max_age: '90',
-		account_policy_checked_on: ''
+		account_policy_checked_on: '',
+		email_notify_on_each_fail: false,
+		email_notify_on_max_fails: true,
+		max_login_fails: 6,
+		user_timeout_in_minutes: 5,
+		fails_log: Hash.new
 	}, :partial => 'settings/account_policy_settings'
 end
