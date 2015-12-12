@@ -13,11 +13,22 @@ module RedmineAccountPolicy
 						user = User.try_to_login(params[:username], params[:password], false)
 						user_from_login = User.where("login = ?", params[:username])
 						puts user_from_login
-					# if user_from_login.nil?
-					# 	invalid_credentials
-					# elseif Setting.plugin_redmine_account_policy[:fails_log].has_key?(user_from_login.id)
 
-
+						if user_from_login.nil?
+							invalid_credentials
+						elsif user.nil?
+							if Setting.plugin_redmine_account_policy[:fails_log].has_key?(user_from_login.id)
+								fails_log_value = Setting.plugin_redmine_account_policy[:fails_log].fetch(user_from_login.id)
+								if fails_log_value.is_a? Integer
+								@settings[:fails_log].[user_from_login.id] = fails_log_value + 1
+									if Setting.plugin_redmine_account_policy[:fails_log].fetch(user_from_login.id) > 6
+										@settings[:fails_log].[user_from_login.id] = DateTime.UtcNow + Setting.plugin_redmine_account_policy[:user_timeout_in_minutes].minutes
+									end
+								elsif fails_log_value.is_a? DateTime
+									if DateTime.UtcNow > se
+								end
+							end
+						end
 
 						if user.nil?
 								invalid_credentials
@@ -31,6 +42,7 @@ module RedmineAccountPolicy
 								handle_inactive_user(user)
 							end
 						end
+						password_authentication_without_user_from_login
 				end
 
 				def run_account_policy_daily_tasks
