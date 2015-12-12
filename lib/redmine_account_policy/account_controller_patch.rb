@@ -4,9 +4,35 @@ module RedmineAccountPolicy
 
 			def self.included(base)
 				base.send(:include, InstanceMethods)
+					base.alias_method_chain :password_authentication, :user_from_login
 			end
 
 			module InstanceMethods
+				#TODO: Commented out include in controller_account_success_authentication_after_hook.rb
+				def password_authentication_with_user_from_login
+						user = User.try_to_login(params[:username], params[:password], false)
+						user_from_login = User.where("login = ?", params[:username])
+						puts user_from_login
+					# if user_from_login.nil?
+					# 	invalid_credentials
+					# elseif Setting.plugin_redmine_account_policy[:fails_log].has_key?(user_from_login.id)
+
+
+
+						if user.nil?
+								invalid_credentials
+						elsif user.new_record?
+								onthefly_creation_failed(user, {:login => user.login, :auth_source_id => user.auth_source_id })
+						else
+								# Valid user
+							if user.active?
+								successful_authentication(user)
+							else
+								handle_inactive_user(user)
+							end
+						end
+				end
+
 				def run_account_policy_daily_tasks
 					expire_old_passwords!
 					lock_unused_accounts!
@@ -37,4 +63,3 @@ module RedmineAccountPolicy
 end
 
 AccountController.send :include, RedmineAccountPolicy::Patches::AccountControllerPatch
-

@@ -28,3 +28,4 @@ Redmine::Plugin.register :redmine_account_policy do
 		fails_log: Hash.new
 	}, :partial => 'settings/account_policy_settings'
 end
+#TODO: check out self.try_to_login
