@@ -6,61 +6,9 @@ module RedmineAccountPolicy
 			def self.included(base)
 				base.send(:include, InstanceMethods)
 				base.send(:include, ClassMethods)
-
 			end
 
-
-				# base.class_eval do
-				# 	extend ClassMethods
-				# 	class << self
-				# 		alias_method_chain :invalid_credentials, :lockout_error
-				#
-				# end
- 			#	alias_method_chain :invalid_credentials, :lockout_error
-
-				# base.alias_method_chain
-
-
-
 			module InstanceMethods
-				#check password @user
-				#TODO: Commented out include in controller_account_success_authentication_after_hook.rb
-				# def password_authentication_with_user_from_login
-				# 		user = User.try_to_login(params[:username], params[:password], false)
-				# 		user_from_login = User.where("login = ?", params[:username]).take
-				# 		puts "jasdfnsajf"
-				# 		puts user_from_login.inspect
-				# 		puts user_from_login.class
-				#
-				#
-				# 		if user_from_login.nil?
-				# 			invalid_credentials
-				# 		elsif user.nil?
-				# 			puts $fails_log.class
-				# 			if $fails_log.has_key?(user_from_login.id)
-				# 				puts "THEY IN THE HASH"
-				# 				fails_log_value = $fails_log.fetch(user_from_login.id)
-				# 				if fails_log_value.is_a? Integer
-				# 				$fails_log[user_from_login.id] = fails_log_value + 1
-				# 				puts "TIMES FAILED"
-				# 				puts $fails_log[user_from_login.id]
-				# 					if $fails_log.fetch(user_from_login.id) > 6
-				# 						@settings[:fails_log][user_from_login.id] = DateTime.UtcNow + Setting.plugin_redmine_account_policy[:user_timeout_in_minutes].minutes
-				# 					end
-				# 				elsif fails_log_value.is_a? DateTime
-				# 					unless DateTime.UtcNow < $fails_log.fetch(user_from_login.id).UtcNow
-				# 						flash.now[:error] = l(:rpp_notice_account_locked)
-				# 					end
-				# 				end
-				# 			end
-				# 		else
-				# 			$fails_log.delete(user_from_login.id)
-				# 			puts "POPOFF THAT HASH"
-				# 		end
-				#
-				# 	password_authentication_without_user_from_login
-				# end
-
 
 				def run_account_policy_daily_tasks
 					expire_old_passwords!
@@ -95,6 +43,7 @@ module RedmineAccountPolicy
 
 				def invalid_credentials_with_lockout_error
 					user_from_login = User.where("login = ?", params[:username]).take
+					RedmineAccountPolicyMailer.on_each_fail_notification(user_from_login)
 					if $fails_log.has_key?(user_from_login.id)
 						fails_log_value = $fails_log.fetch(user_from_login.id)
 						if fails_log_value.class.to_s.eql? "DateTime"
@@ -111,12 +60,6 @@ module RedmineAccountPolicy
 																	+ ". " \
 																	+ (Setting.plugin_redmine_account_policy[:max_login_fails].to_i \
 																		- fails_log_value).to_s + " attempts remaining."
-							# invalid_credentials_without_lockout_error
-							# logger.warn "Failed login due to timeout lock for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
-							# flash.now[:error] = l(:rpp_notice_account_timeout) \
-							# 										+ ((fails_log_value - DateTime.now.utc) * 1.days / 60).ceil.to_s \
-							# 										+ " " + l(:rpp_setting_minute_plural) \
-							# 										+ " or contact an administrator."
 						end
 					else
 							invalid_credentials_without_lockout_error

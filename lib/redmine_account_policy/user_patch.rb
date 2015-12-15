@@ -11,10 +11,7 @@ module RedmineAccountPolicy
 			module InstanceMethods
 
 				def check_password_with_count_fails?(clear_password)
-					# x = DateTime.new
-					# puts x.class.to_s.eql? "DateTime"
-
-					puts id
+			
 					if $fails_log.has_key?(id)
 					 puts "HASH KEY FOUND"
 					 fails_log_value = $fails_log.fetch(id)

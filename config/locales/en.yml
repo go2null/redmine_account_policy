@@ -13,3 +13,5 @@ en:
   rpp_setting_user_timeout_in_minutes: 'On max failed logins, block user logins for'
   rpp_setting_minute_plural: 'minutes'
   rpp_notice_account_timeout: 'Your account has been locked due to too many login attempts. Please wait for '
+  rpp_subject_failed_login: 'Failed Login Attempt - RDQ Account'
+  rpp_subject_max_login_failures: 'Maximum Login Attempts Reached - RDQ Account'

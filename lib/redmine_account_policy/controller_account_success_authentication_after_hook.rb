@@ -1,10 +1,7 @@
 module RedmineAccountPolicy
 	module Hooks
 		class ControllerAccountSuccessAuthenticationAfter  < Redmine::Hook::ViewListener
-			# def self.included(base)
-		  #   #  base.include, RedmineAccountPolicy::Patches::AccountControllerPatch
-		  #    base.extend RedmineAccountPolicy::Patches::Class
-		  #  end
+
 			 include RedmineAccountPolicy::Patches::AccountControllerPatch::InstanceMethods
 			def controller_account_success_authentication_after(context={})
 				# as we don't have a daily cron, trigger on admin login

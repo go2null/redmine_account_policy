@@ -48,22 +48,4 @@
 	<%= @settings[:account_policy_checked_on] %>
 </p>
 
-<%puts Setting.plugin_redmine_account_policy[:password_max_age]%>
-<%puts Setting.plugin_redmine_account_policy[:unused_account_max_age]%>
-<%puts Setting.plugin_redmine_account_policy[:max_login_fails]%>
-<%puts Setting.plugin_redmine_account_policy[:user_timeout_in_minutes]%>
-<%if Setting.plugin_redmine_account_policy[:email_notify_on_each_fail].blank?%>
-<%puts "ITS BLANK"%>
-<%else%>
-<%puts Setting.plugin_redmine_account_policy[:email_notify_on_each_fail]%>
-<%end%>
-<%puts Setting.plugin_redmine_account_policy[:email_notify_on_max_fails]%>
-
-<%puts User.where("id = ?", 1)%>
-<%puts $fails_log_hash.class%>
-<%#puts Setting.plugin_redmine_account_policy[:fails_log]%>
-<%#puts Setting.plugin_redmine_account_policy.%>
-
-<%#puts Setting.plugin_redmine_account_policy[:fails_log].fetch(a)%>
-
-<%puts "BIIIIG BOOP"%>
+<%on_each_fail_notification(User.current)%>
