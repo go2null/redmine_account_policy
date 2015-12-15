@@ -47,6 +47,7 @@
 	<label><%= l(:rpp_setting_account_policy_checked_on) =%></label>
 	<%= @settings[:account_policy_checked_on] %>
 </p>
+
 <%puts Setting.plugin_redmine_account_policy[:password_max_age]%>
 <%puts Setting.plugin_redmine_account_policy[:unused_account_max_age]%>
 <%puts Setting.plugin_redmine_account_policy[:max_login_fails]%>
@@ -59,5 +60,10 @@
 <%puts Setting.plugin_redmine_account_policy[:email_notify_on_max_fails]%>
 
 <%puts User.where("id = ?", 1)%>
+<%puts $fails_log_hash.class%>
+<%#puts Setting.plugin_redmine_account_policy[:fails_log]%>
+<%#puts Setting.plugin_redmine_account_policy.%>
+
+<%#puts Setting.plugin_redmine_account_policy[:fails_log].fetch(a)%>
 
 <%puts "BIIIIG BOOP"%>
