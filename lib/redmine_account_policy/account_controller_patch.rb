@@ -106,7 +106,12 @@ module RedmineAccountPolicy
 																		+ " or contact an administrator."
 							end
 						else
-							invalid_credentials_without_lockout_error
+							logger.warn "Failed login for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
+							flash.now[:error] = l(:notice_account_invalid_creditentials) \
+																	+ ". " \
+																	+ (Setting.plugin_redmine_account_policy[:max_login_fails].to_i \
+																		- fails_log_value).to_s + " attempts remaining."
+							# invalid_credentials_without_lockout_error
 							# logger.warn "Failed login due to timeout lock for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
 							# flash.now[:error] = l(:rpp_notice_account_timeout) \
 							# 										+ ((fails_log_value - DateTime.now.utc) * 1.days / 60).ceil.to_s \

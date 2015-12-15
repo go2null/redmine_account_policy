@@ -12,4 +12,4 @@ en:
   rpp_setting_max_login_fails: 'Maximum failed login attempts before timeout'
   rpp_setting_user_timeout_in_minutes: 'On max failed logins, block user logins for'
   rpp_setting_minute_plural: 'minutes'
-  rpp_notice_account_timeout: 'Your account has been locked due to too many login attempts. Please wait '
+  rpp_notice_account_timeout: 'Your account has been locked due to too many login attempts. Please wait for '
