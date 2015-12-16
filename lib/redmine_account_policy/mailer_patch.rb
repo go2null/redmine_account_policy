@@ -9,7 +9,7 @@ module RedmineAccountPolicy
 			module InstanceMethods
 
         def on_each_fail_notification(user_to_notify)
-					mail to: user_to_notify.mail, subject: l(:rpp_subject_failed_login)
+					mail to: user_to_notify.mail, subject: (l(:rpp_subject_failed_login) + DateTime.now.to_formatted_s(:long_ordinal))
         end
 
         def on_max_fails_notification(user_to_notify)
@@ -20,7 +20,7 @@ module RedmineAccountPolicy
 					else
 						recipients = User.active.where(:admin => true)
 					end
-					mail to: recipients, subject: l(:rpp_subject_max_login_failures)
+					mail to: recipients, subject: (l(:rpp_subject_max_login_failures) + DateTime.now.to_formatted_s(:long_ordinal))
         end
 
 
