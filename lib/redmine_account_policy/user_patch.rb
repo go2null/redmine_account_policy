@@ -5,10 +5,53 @@ module RedmineAccountPolicy
 			def self.included(base)
 				base.send(:include, InstanceMethods)
 				base.alias_method_chain :check_password?, :count_fails
+				base.alias_method_chain :validate_password_length, :account_policy_extra_settings
 
 			end
 
 			module InstanceMethods
+			
+#			  def validate_password_length
+ #   return if password.blank? && generate_password?
+  #  # Password length validation based on setting
+   # if !password.nil? && password.size < Setting.password_min_length.to_i
+     # errors.add(:password, :too_short, :count => Setting.password_min_length.to_i)
+    #end
+ # end
+			
+				def validate_password_length_with_account_policy_extra_settings
+					check_lower_case = Setting.plugin_redmine_account_policy[:lower_case_in_pass].eql? 'on'
+					check_upper_case = Setting.plugin_redmine_account_policy[:upper_case_in_pass].eql? 'on'
+					check_numeric = Setting.plugin_redmine_account_policy[:numerical_in_pass].eql? 'on'
+					check_nonalphanumeric = Setting.plugin_redmine_account_policy[:nonalphanumeric_in_pass].eql? 'on'
+					
+					puts check_lower_case
+					puts check_upper_case
+					puts check_numeric
+					puts check_nonalphanumeric
+					
+					if check_lower_case
+						errors.add(:base,'Password must contain a lower case character [a-z]') unless (password =~ /([[:lower:]]+)/)
+					end
+					
+					if check_upper_case
+						errors.add(:base,'Password must contain an upper case character [A-Z]') unless (password =~ /([[:upper:]]+)/)
+					end
+					
+					if check_numeric
+						errors.add(:base,'Password must contain a numeric character [0-9]') unless (password =~ /([0-9]+)/)
+					end
+					
+					if check_nonalphanumeric
+						errors.add(:base,'Password must contain a non-alphanumeric character (such as !$#,)') unless (password =~ /([^[:alnum:]]+)/)
+					end
+				
+				
+		
+				
+				
+					validate_password_length_without_account_policy_extra_settings
+				end
 
 				def check_password_with_count_fails?(clear_password)
 

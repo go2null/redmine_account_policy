@@ -27,7 +27,11 @@ Redmine::Plugin.register :redmine_account_policy do
 		email_notify_on_each_fail: false,
 		email_notify_on_max_fails: true,
 		max_login_fails: 6,
-		user_timeout_in_minutes: 5
+		user_timeout_in_minutes: 5,
+		lower_case_in_pass: true,
+		upper_case_in_pass: true,
+		numeric_in_pass: true,
+		nonalphanumeric_in_pass: true
 
 	}, :partial => 'settings/account_policy_settings'
 end

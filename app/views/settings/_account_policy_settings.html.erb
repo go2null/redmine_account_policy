@@ -44,6 +44,38 @@
 </p>
 
 <p>
+	<label><%= l(:rpp_setting_password_options) =%></label>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_lower_case_in_pass) =%></small></label>
+	<%= check_box_tag 'settings[lower_case_in_pass]', params[:lower_case_in_pass], @settings[:lower_case_in_pass] %>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_upper_case_in_pass) =%></small></label>
+	<%= check_box_tag 'settings[upper_case_in_pass]', params[:upper_case_in_pass], @settings[:upper_case_in_pass] %>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_digit_in_pass) =%></small></label>
+	<%= check_box_tag 'settings[numerical_in_pass]', params[:numerical_in_pass], @settings[:numerical_in_pass] %>
+</p>
+
+<p>
+	<label><small><%= l(:rpp_setting_non_alpha_in_pass) =%></small></label>
+	<%= check_box_tag 'settings[nonalphanumeric_in_pass]', params[:nonalphanumeric_in_pass], @settings[:nonalphanumeric_in_pass] %>
+</p>
+
+
+
+<p>
 	<label><%= l(:rpp_setting_account_policy_checked_on) =%></label>
 	<%= @settings[:account_policy_checked_on] %>
 </p>
+
+<%puts Setting.plugin_redmine_account_policy[:lower_case_in_pass]%>
+<%puts Setting.plugin_redmine_account_policy[:upper_case_in_pass]%>
+<%puts Setting.plugin_redmine_account_policy[:numerical_in_pass]%>
+<%puts Setting.plugin_redmine_account_policy[:nonalphanumeric_in_pass]%>
+
