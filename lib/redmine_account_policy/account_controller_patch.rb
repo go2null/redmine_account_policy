@@ -43,7 +43,6 @@ module RedmineAccountPolicy
 
 				def invalid_credentials_with_lockout_error
 					user_from_login = User.where("login = ?", params[:username]).take
-					RedmineAccountPolicyMailer.on_each_fail_notification(user_from_login)
 					if $fails_log.has_key?(user_from_login.id)
 						fails_log_value = $fails_log.fetch(user_from_login.id)
 						if fails_log_value.class.to_s.eql? "DateTime"
@@ -55,6 +54,9 @@ module RedmineAccountPolicy
 																		+ " or contact an administrator."
 							end
 						else
+							if Setting.plugin_redmine_account_policy[:email_notify_on_each_fail].eql? 'on'
+								Mailer.on_each_fail_notification(user_from_login).deliver
+							end
 							logger.warn "Failed login for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
 							flash.now[:error] = l(:notice_account_invalid_creditentials) \
 																	+ ". " \

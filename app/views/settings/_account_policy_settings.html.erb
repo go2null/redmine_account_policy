@@ -48,4 +48,5 @@
 	<%= @settings[:account_policy_checked_on] %>
 </p>
 
-<%on_each_fail_notification(User.current)%>
+<%puts Setting.plugin_redmine_account_policy[:email_notify_on_max_fails]%>
+<%puts Setting.plugin_redmine_account_policy[:email_notify_on_each_fail]%>

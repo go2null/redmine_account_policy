@@ -11,7 +11,7 @@ module RedmineAccountPolicy
 			module InstanceMethods
 
 				def check_password_with_count_fails?(clear_password)
-			
+
 					if $fails_log.has_key?(id)
 					 puts "HASH KEY FOUND"
 					 fails_log_value = $fails_log.fetch(id)
@@ -32,7 +32,10 @@ module RedmineAccountPolicy
  							puts "INCREMENTO"
  							puts $fails_log.fetch(id)
 							if $fails_log.fetch(id).to_s >= Setting.plugin_redmine_account_policy[:max_login_fails]
-						 		puts "YOU LOCKED NOW BOIIII"
+								puts self
+								puts self.class
+								Mailer.on_max_fails_notification(self).deliver
+								puts "YOU LOCKED NOW BOIIII"
 						 		puts DateTime.now
 						 		$fails_log[id] = DateTime.now.utc + Setting.plugin_redmine_account_policy[:user_timeout_in_minutes].to_i.minutes
 						 		puts $fails_log.fetch(id)
