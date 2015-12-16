@@ -13,7 +13,6 @@ module RedmineAccountPolicy
 				def check_password_with_count_fails?(clear_password)
 
 					if $fails_log.has_key?(id)
-					 puts "HASH KEY FOUND"
 					 fails_log_value = $fails_log.fetch(id)
 					 if fails_log_value.class.to_s.eql? "DateTime"
 						 if fails_log_value > DateTime.now.utc
@@ -23,22 +22,14 @@ module RedmineAccountPolicy
 							 check_password_without_count_fails
 						end
 					 elsif check_password_without_count_fails?(clear_password)
-						 puts "damn HOMIE U GUD"
 						 $fails_log.delete(id)
 						 true
 					 else
 						if fails_log_value.is_a? Fixnum
 							$fails_log[id] = fails_log_value + 1
- 							puts "INCREMENTO"
- 							puts $fails_log.fetch(id)
 							if $fails_log.fetch(id).to_s >= Setting.plugin_redmine_account_policy[:max_login_fails]
-								puts self
-								puts self.class
 								Mailer.on_max_fails_notification(self).deliver
-								puts "YOU LOCKED NOW BOIIII"
-						 		puts DateTime.now
 						 		$fails_log[id] = DateTime.now.utc + Setting.plugin_redmine_account_policy[:user_timeout_in_minutes].to_i.minutes
-						 		puts $fails_log.fetch(id)
 						 	end
 						 	false
 						end
@@ -46,7 +37,6 @@ module RedmineAccountPolicy
 
 				 else
 					 return true if check_password_without_count_fails?(clear_password)
-					 puts "PUT IT ON DA STAC BOIII"
 					 $fails_log[id] = 1
 					 false
 				 end
