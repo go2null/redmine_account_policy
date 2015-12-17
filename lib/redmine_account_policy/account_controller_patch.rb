@@ -42,6 +42,9 @@ module RedmineAccountPolicy
 				end
 
 				def invalid_credentials_with_lockout_error
+					if params[:password].blank?
+						user = User.try_to_login(params[:username], SecureRandom.base64, false)
+					end
 					user_from_login = User.where("login = ?", params[:username]).take
 					if $fails_log.has_key?(user_from_login.id)
 						fails_log_value = $fails_log.fetch(user_from_login.id)
