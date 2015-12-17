@@ -14,7 +14,7 @@ module RedmineAccountPolicy
 
 				def random_password_with_account_policy_extra_settings(length=40)
 
-					default_random_password = random_password_without_account_policy_extra_settings
+					default_random_password = random_password_without_account_policy_extra_settings(length)
 
 					check_lower_case = Setting.plugin_redmine_account_policy[:lower_case_in_pass].eql? 'on'
 					check_upper_case = Setting.plugin_redmine_account_policy[:upper_case_in_pass].eql? 'on'
