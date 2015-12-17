@@ -1,0 +1,2 @@
+<h1>Max login attempts reached!</h1>
+<p>RDQ account [<%=@user.login%>] belonging to <%=@user.name%> reached its maximum number of failed attempts at <%=DateTime.now.to_formatted_s(:long_ordinal)%>. The account has been locked for <%=Setting.plugin_redmine_account_policy[:user_timeout_in_minutes].to_s%> minutes.</p>
