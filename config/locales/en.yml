@@ -18,5 +18,5 @@ en:
   rpp_setting_digit_in_pass: 'Numerical (0-9)'
   rpp_setting_non_alpha_in_pass: 'Non-alphanumeric (!$#,)'
   rpp_notice_account_timeout: 'Your account has been locked due to too many login attempts. Please wait for '
-  rpp_subject_failed_login: 'Bell RDQ Warning! - Failed Login Attempt - '
-  rpp_subject_max_login_failures: '*Bell RDQ Warning*! - Maximum Login Attempts Reached - '
+  rpp_subject_failed_login: 'Bell RDQ Warning! - Failed Login Attempt - %{date}'
+  rpp_subject_max_login_failures: '*Bell RDQ Warning*! - Maximum Login Attempts Reached - %{date}'
