@@ -46,29 +46,29 @@ module RedmineAccountPolicy
 						user = User.try_to_login(params[:username], SecureRandom.base64, false)
 					end
 					user_from_login = User.where("login = ?", params[:username]).take
-					if $fails_log.has_key?(user_from_login.id)
-						fails_log_value = $fails_log.fetch(user_from_login.id)
-						if fails_log_value.class.to_s.eql? "DateTime"
-							if fails_log_value > DateTime.now.utc
-								logger.warn "Failed login due to timeout lock for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
-								flash.now[:error] = l(:rpp_notice_account_timeout) \
-																		+ ((fails_log_value - DateTime.now.utc) * 1.days / 60).ceil.to_s \
-																		+ " " + l(:rpp_setting_minute_plural) \
-																		+ " or contact an administrator."
+						if !user_from_login.nil? && $fails_log.has_key?(user_from_login.id)
+							fails_log_value = $fails_log.fetch(user_from_login.id)
+							if fails_log_value.class.to_s.eql? "DateTime"
+								if fails_log_value > DateTime.now.utc
+									logger.warn "Failed login due to timeout lock for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
+									flash.now[:error] = l(:rpp_notice_account_timeout) \
+																			+ ((fails_log_value - DateTime.now.utc) * 1.days / 60).ceil.to_s \
+																			+ " " + l(:rpp_setting_minute_plural) \
+																			+ " or contact an administrator."
+								end
+							else
+								if Setting.plugin_redmine_account_policy[:email_notify_on_each_fail].eql? 'on'
+									Mailer.on_each_fail_notification(user_from_login).deliver
+								end
+								logger.warn "Failed login for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
+								flash.now[:error] = l(:notice_account_invalid_creditentials) \
+																		+ ". " \
+																		+ (Setting.plugin_redmine_account_policy[:max_login_fails].to_i \
+																			- fails_log_value).to_s + " attempts remaining."
 							end
 						else
-							if Setting.plugin_redmine_account_policy[:email_notify_on_each_fail].eql? 'on'
-								Mailer.on_each_fail_notification(user_from_login).deliver
-							end
-							logger.warn "Failed login for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
-							flash.now[:error] = l(:notice_account_invalid_creditentials) \
-																	+ ". " \
-																	+ (Setting.plugin_redmine_account_policy[:max_login_fails].to_i \
-																		- fails_log_value).to_s + " attempts remaining."
+								invalid_credentials_without_lockout_error
 						end
-					else
-							invalid_credentials_without_lockout_error
-					end
 				end
 
 			end
