@@ -1,2 +1,2 @@
-<h1>Failed login attempt!</h1>
-<p>An unsuccessful attempt to login to your RDQ account was made at <%=DateTime.now.to_formatted_s(:long_ordinal)%>.</p>
+<h1><%=l(:rpp_body_failed_login_header)%></h1>
+<p><%=l(:rpp_body_failed_login, date: DateTime.now.to_formatted_s(:long_ordinal))%></p>

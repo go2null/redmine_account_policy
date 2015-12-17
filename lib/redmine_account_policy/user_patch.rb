@@ -14,109 +14,6 @@ module RedmineAccountPolicy
 
 				def random_password_with_account_policy_extra_settings(length=40)
 
-					default_random_password = random_password_without_account_policy_extra_settings
-
-					check_lower_case = Setting.plugin_redmine_account_policy[:lower_case_in_pass].eql? 'on'
-					check_upper_case = Setting.plugin_redmine_account_policy[:upper_case_in_pass].eql? 'on'
-					check_numeric = Setting.plugin_redmine_account_policy[:numerical_in_pass].eql? 'on'
-					check_nonalphanumeric = Setting.plugin_redmine_account_policy[:nonalphanumeric_in_pass].eql? 'on'
-
-					new_password_with_extra_settings_characters = default_random_password.password
-					extrachars = Array.new
-					if check_lower_case
-						extrachars = extrachars + ("a".."z").to_a
-					end
-
-					if check_upper_case
-						extrachars = extrachars + ("A".."Z").to_a
-					end
-
-					if check_numeric
-						extrachars = extrachars + ("0".."9").to_a
-					end
-
-					if check_nonalphanumeric
-						extrachars = extrachars + ("!".."*").to_a  + ("[".."_").to_a  + ("{".."~").to_a
-						extrachars << "@"
-						extrachars << "`"
-					end
-
-					password_valid = false
-
-					if !extrachars.empty?
-						while !password_valid do
-
-							if check_lower_case
-								checklc = (new_password_with_extra_settings_characters =~ /([[:lower:]]+)/)
-							else
-								checklc = true
-							end
-
-							if check_upper_case
-								checkuc = (new_password_with_extra_settings_characters =~ /([[:upper:]]+)/)
-							else
-								checkuc = true
-							end
-
-							if check_numeric
-								checknum = (new_password_with_extra_settings_characters =~ /([0-9]+)/)
-							else
-								checknum = true
-							end
-
-							if check_nonalphanumeric
-								checknonan = (new_password_with_extra_settings_characters =~ /([^[:alnum:]]+)/)
-							else
-								checknonan = true
-							end
-
-							if (checklc && checkuc && checknum && checknonan)
-								password_valid = true
-							else
-								password_valid = false
-							end
-							new_password_with_extra_settings_characters << extrachars[SecureRandom.random_number(extrachars.size)]
-						end
-					end
-
-					self.password = new_password_with_extra_settings_characters
-					self.password_confirmation = new_password_with_extra_settings_characters
-					self
-
-				end
-
-
-
-				def validate_password_length_with_account_policy_extra_settings
-					return if password.blank? && generate_password?
-					if !password.blank?
-						check_lower_case = Setting.plugin_redmine_account_policy[:lower_case_in_pass].eql? 'on'
-						check_upper_case = Setting.plugin_redmine_account_policy[:upper_case_in_pass].eql? 'on'
-						check_numeric = Setting.plugin_redmine_account_policy[:numerical_in_pass].eql? 'on'
-						check_nonalphanumeric = Setting.plugin_redmine_account_policy[:nonalphanumeric_in_pass].eql? 'on'
-
-						if check_lower_case
-							errors.add(:base,'Password must contain a lower case character [a-z]') unless (password =~ /([[:lower:]]+)/)
-						end
-
-						if check_upper_case
-								errors.add(:base,'Password must contain an upper case character [A-Z]') unless (password =~ /([[:upper:]]+)/)
-						end
-
-						if check_numeric
-							errors.add(:base,'Password must contain a numeric character [0-9]') unless (password =~ /([0-9]+)/)
-						end
-
-						if check_nonalphanumeric
-							errors.add(:base,'Password must contain a non-alphanumeric character (such as !$#,)') unless (password =~ /([^[:alnum:]]+)/)
-						end
-					end
-
-					validate_password_length_without_account_policy_extra_settings
-				end
-
-				def random_password_with_account_policy_extra_settings(length=40)
-
 					default_random_password = random_password_without_account_policy_extra_settings(length)
 
 					check_lower_case = Setting.plugin_redmine_account_policy[:lower_case_in_pass].eql? 'on'
@@ -189,7 +86,6 @@ module RedmineAccountPolicy
 				end
 
 
-
 				def validate_password_length_with_account_policy_extra_settings
 					return if password.blank? && generate_password?
 					if !password.blank?
@@ -199,19 +95,19 @@ module RedmineAccountPolicy
 						check_nonalphanumeric = Setting.plugin_redmine_account_policy[:nonalphanumeric_in_pass].eql? 'on'
 
 						if check_lower_case
-							errors.add(:base,'Password must contain a lower case character [a-z]') unless (password =~ /([[:lower:]]+)/)
+							errors.add(:base, l(:rpp_error_message_password_no_lowercase)) unless (password =~ /([[:lower:]]+)/)
 						end
 
 						if check_upper_case
-								errors.add(:base,'Password must contain an upper case character [A-Z]') unless (password =~ /([[:upper:]]+)/)
+								errors.add(:base, l(:rpp_error_message_password_no_uppercase)) unless (password =~ /([[:upper:]]+)/)
 						end
 
 						if check_numeric
-							errors.add(:base,'Password must contain a numeric character [0-9]') unless (password =~ /([0-9]+)/)
+							errors.add(:base, l(:rpp_error_message_password_no_numeric)) unless (password =~ /([0-9]+)/)
 						end
 
 						if check_nonalphanumeric
-							errors.add(:base,'Password must contain a non-alphanumeric character (such as !$#,)') unless (password =~ /([^[:alnum:]]+)/)
+							errors.add(:base, l(:rpp_error_message_password_no_noonalphan)) unless (password =~ /([^[:alnum:]]+)/)
 						end
 					end
 
