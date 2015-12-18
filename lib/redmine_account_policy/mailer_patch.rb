@@ -7,25 +7,26 @@ module RedmineAccountPolicy
 			end
 
 			module InstanceMethods
+        def notify_login_failure(user, ip_address)
+					set_instance_variables(user, ip_address)
 
-        def on_each_fail_notification(user_to_notify)
-					mail to: user_to_notify.mail, subject: l(:rpp_subject_failed_login, date: DateTime.now.to_formatted_s(:long_ordinal))
+					mail to: user.mail, subject: l(:rap_mail_subject_login_failure)
         end
 
-        def on_max_fails_notification(user_to_notify)
-					@user = user_to_notify
-					recipients = User.active.where(:admin => true)
-					if Setting.plugin_redmine_account_policy[:email_notify_on_max_fails].eql? 'on'
-						recipients = User.active.where('(admin = true) OR (id = ?)', @user.id )
-					else
-						recipients = User.active.where(:admin => true)
-					end
-					mail to: recipients, subject: l(:rpp_subject_max_login_failures, date: DateTime.now.to_formatted_s(:long_ordinal))
+        def notify_account_lockout(user, ip_address)
+					set_instance_variables(user, ip_address)
+
+        	admins = User.active.select { |u| u.admin? }.map(&:mail)
+					mail to: user.mail, bcc: admins, subject: l(:rap_mail_subject_login_lockout)
         end
 
+        def set_instance_variables(user, ip_address)
+        	# set instance variables to use in mailer views
+        	@user = user
+        	@ip_address = ip_address
+        end
 
 			end
-
 		end
 	end
 end

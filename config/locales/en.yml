@@ -1,30 +1,54 @@
 # English strings go here for Rails i18n
 en:
-  rpp_notice_password_expired: 'Your password has expired.'
-  rpp_setting_account_policy_checked_on: 'Password policy last checked on'
-  rpp_setting_password_max_age: 'Password maximum lifetime'
-  rpp_setting_unused_account_max_age: 'Lock accounts not used for'
-  rpp_setting_email_notifications: 'Email notification options'
-  rpp_setting_timeout_options: 'Timeout options'
-  rpp_setting_notify_on_each_fail: 'Notify on every failed login'
-  rpp_setting_notify_on_max_fails: 'Notify on max failed login attempts'
-  rpp_setting_admin_notification_text: "*The administrator will always be notified when a user account's maximum login attempts has been reached"
-  rpp_setting_max_login_fails: 'Maximum failed login attempts before timeout'
-  rpp_setting_user_timeout_in_minutes: 'On max failed logins, block user logins for'
-  rpp_setting_minute_plural: 'minutes'
-  rpp_setting_password_options: 'Passwords must contain at least one of the following character types'
-  rpp_setting_lower_case_in_pass: 'Lower case (a-z)'
-  rpp_setting_upper_case_in_pass: 'Upper case (A-Z)'
-  rpp_setting_digit_in_pass: 'Numerical (0-9)'
-  rpp_setting_non_alpha_in_pass: 'Non-alphanumeric (!$#,)'
-  rpp_notice_account_timeout: 'Your account has been locked due to too many login attempts. Please wait for '
-  rpp_subject_failed_login: 'Warning! - Failed Login Attempt - %{date}'
-  rpp_subject_max_login_failures: '*Warning*! - Maximum Login Attempts Reached - %{date}'
-  rpp_body_failed_login_header: 'Failed login attempt!'
-  rpp_body_failed_login: 'An unsuccessful attempt to login to your RDQ account was made at  %{date}.'
-  rpp_body_max_login_failures_header: 'Max login attempts reached!'
-  rpp_body_max_login_failures: 'Account [%{login}] belonging to %{name} reached its maximum number of failed attempts at %{date}. The account has been locked for %{timediff} minutes.'
-  rpp_error_message_password_no_lowercase: 'Password must contain a lower case character [a-z]'
-  rpp_error_message_password_no_uppercase: 'Password must contain an upper case character [A-Z]'
-  rpp_error_message_password_no_numeric: 'Password must contain a numeric character [0-9]'
-  rpp_error_message_password_no_noonalphan: 'Password must contain a non-alphanumeric character (such as !$#,)'
+  # == password complexity == #
+  rap_setting_password_complexity:    'Password Complexity'
+  rap_setting_password_complexity_a:  'Passwords must contain at least'
+  rap_setting_password_complexity_b:  'of the following character classes'
+  rap_setting_password_upper_case:    '* Upper case (A-Z)'
+  rap_setting_password_lower_case:    '* Lower case (a-z)'
+  rap_setting_password_numerical:     '* Numerical (0-9)'
+  rap_setting_password_non_alphanum:  '* Non-alphanumeric (!$#,)'
+
+  rap_error_password_complexity:      'Passwords must contain characters from %{complexity} of the following character classes: upper case (A-Z), lower case (a-z), numbers (0-9) and non-alphanumric (!$#,).'
+
+
+    # == password expiry == #
+  rap_setting_password_expiry:        'Password Expiry'
+  rap_setting_password_max_age:       'Maximum password age'
+  rap_notice_password_expired:        'Your password has expired.'
+
+
+    # == password reuse == #
+  rap_setting_password_reuse:         'Password Reuse'
+  rap_notice_password_reuse:          'Your new password must be different from your last %{min_unique} passwords'
+  rap_setting_password_min_age:       'Prevent changing password before'
+  rap_setting_password_min_unique_a:  'TODO: (Redmine already does it for last password). Ensure previous'
+  rap_setting_password_min_unique_b:  'passwords are unique'
+
+    # == invalid logins lockout == #
+  rap_setting_invalid_logins:         'Invalid Login Attempts'
+  rap_setting_invalid_logins_a:       'Lock account for'
+  rap_setting_invalid_logins_b:       'minutes after'
+  rap_setting_invalid_logins_c:       'unsuccessful login attempts'
+  rap_setting_notify_on_failure:      'Notify user on every failed login'
+  rap_setting_notify_on_lockout:      'Users and Administrators are always notified when an account is locked out.'
+  rap_notice_invalid_logins_remaining: 'attempts remaining.'
+
+  rap_notice_account_lockout:         'Your account has been locked due to too many login attempts. Please wait for '
+
+  rap_mail_subject_login_failure:     'Failed Login Attempt'
+  rap_mail_subject_login_lockout:     'Maximum Login Attempts Reached - Account temporarily locked'
+  rap_mail_body_login_failure_header: 'Failed login attempt'
+  rap_mail_body_login_lockout_header: 'Maximum allowed login attempts reached'
+  rap_mail_body_login_failure:        'An unsuccessful attempt to login to your account was made from %{ip_address}.'
+  rap_mail_body_login_lockout:        'Your account "%{name}" [%{login}] reached its maximum allowed number fo failed login attempts.  The last attempt was from %{ip_address}.  Your account has been locked for %{lockout_duration} minutes.'
+
+
+    # == unused accounts == #
+  rap_setting_unused_account:         'Unused/Dormant Accounts'
+  rap_setting_unused_account_max_age: 'Deactivate accounts not used for'
+
+
+    # == daily cron == #
+  rap_setting_account_policy_checked_on: 'Account policies last checked on'
+

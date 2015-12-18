@@ -1,75 +1,61 @@
+<p><label><%= l(:rap_setting_password_complexity) %></label></p>
 <p>
-	<label><%= l(:rpp_setting_password_max_age) =%></label>
-	<%= text_field_tag 'settings[password_max_age]', @settings[:password_max_age], size: 6 %>
+	<%= l(:rap_setting_password_complexity_a) %>
+	<%= text_field_tag 'settings[password_complexity]', @settings[:password_complexity], size: 1 %>
+	<%= l(:rap_setting_password_complexity_b) %>
+	</br>
+	<%= l(:rap_setting_password_upper_case)   %></br>
+	<%= l(:rap_setting_password_lower_case)   %></br>
+	<%= l(:rap_setting_password_numerical)    %></br>
+	<%= l(:rap_setting_password_non_alphanum) %>
+</p>
+
+
+<p><label><%= l(:rap_setting_password_expiry) %></label></p>
+<p>
+	<%= l(:rap_setting_password_max_age) %>
+	<%= text_field_tag 'settings[password_max_age]', @settings[:password_max_age], size: 1 %>
 	<%= l(:label_day_plural) %>
 </p>
 
+
+<p><label><%= l(:rap_setting_password_reuse) %></label></p>
 <p>
-	<label><%= l(:rpp_setting_unused_account_max_age) =%></label>
-	<%= text_field_tag 'settings[unused_account_max_age]', @settings[:unused_account_max_age], size: 6 %>
+	<%= l(:rap_setting_password_min_unique_a) %>
+	<%= text_field_tag 'settings[password_min_unique]', @settings[:password_min_unique], size: 1 %>
+	<%= l(:rap_setting_password_min_unique_b) %>
+</p>
+<p>
+	<%= l(:rap_setting_password_min_age) %>
+	<%= text_field_tag 'settings[password_min_age]', @settings[:password_min_age], size: 1 %>
 	<%= l(:label_day_plural) %>
 </p>
 
-<p>
-	<label><%= l(:rpp_setting_timeout_options) =%></label>
-</p>
 
+<p><label><%= l(:rap_setting_invalid_logins) %></label></p>
 <p>
-	<label><small><%= l(:rpp_setting_max_login_fails) =%></small></label>
-	<%= text_field_tag 'settings[max_login_fails]', @settings[:max_login_fails], size: 6 %>
-</p>
-
-<p>
-	<label><small><%= l(:rpp_setting_user_timeout_in_minutes) =%></small></label>
-	<%= text_field_tag 'settings[user_timeout_in_minutes]', @settings[:user_timeout_in_minutes], size: 5 %>
-	<%= l(:rpp_setting_minute_plural) %>
-</p>
-
-
-<p>
-	<label><%= l(:rpp_setting_email_notifications) =%></label>
-</p>
-
-<p>
-	<label><small><%= l(:rpp_setting_notify_on_each_fail) =%></small></label>
-	<%= check_box_tag 'settings[email_notify_on_each_fail]', params[:email_notify_on_each_fail], @settings[:email_notify_on_each_fail] %>
-</p>
-
-<p>
-	<label><small><%= l(:rpp_setting_notify_on_max_fails) =%></small></label>
-	<%= check_box_tag 'settings[email_notify_on_max_fails]', params[:email_notify_on_max_fails], @settings[:email_notify_on_max_fails] %>
+	<%= l(:rap_setting_invalid_logins_a) %>
+	<%= text_field_tag 'settings[account_lockout_duration]', @settings[:account_lockout_duration], size: 1 %>
+	<%= l(:rap_setting_invalid_logins_b) %>
+	<%= text_field_tag 'settings[account_lockout_threshold]', @settings[:account_lockout_threshold], size: 1 %>
+	<%= l(:rap_setting_invalid_logins_c) %>
 </p>
 <p>
-	<label><small><i><%= l(:rpp_setting_admin_notification_text) =%></i></small><label>
+	<%= check_box_tag 'settings[notify_on_failure]', params[:notify_on_failure], @settings[:notify_on_failure] %>
+	<%= l(:rap_setting_notify_on_failure) %>
 </p>
+<p><em class="info"><%= l(:rap_setting_notify_on_lockout) %></em></p>
 
-<p>
-	<label><%= l(:rpp_setting_password_options) =%></label>
-</p>
 
+<p><label><%= l(:rap_setting_unused_account) %></label></p>
 <p>
-	<label><small><%= l(:rpp_setting_lower_case_in_pass) =%></small></label>
-	<%= check_box_tag 'settings[lower_case_in_pass]', params[:lower_case_in_pass], @settings[:lower_case_in_pass] %>
-</p>
-
-<p>
-	<label><small><%= l(:rpp_setting_upper_case_in_pass) =%></small></label>
-	<%= check_box_tag 'settings[upper_case_in_pass]', params[:upper_case_in_pass], @settings[:upper_case_in_pass] %>
-</p>
-
-<p>
-	<label><small><%= l(:rpp_setting_digit_in_pass) =%></small></label>
-	<%= check_box_tag 'settings[numerical_in_pass]', params[:numerical_in_pass], @settings[:numerical_in_pass] %>
-</p>
-
-<p>
-	<label><small><%= l(:rpp_setting_non_alpha_in_pass) =%></small></label>
-	<%= check_box_tag 'settings[nonalphanumeric_in_pass]', params[:nonalphanumeric_in_pass], @settings[:nonalphanumeric_in_pass] %>
+	<%= l(:rap_setting_unused_account_max_age) %>
+	<%= text_field_tag 'settings[unused_account_max_age]', @settings[:unused_account_max_age], size: 1 %>
+	<%= l(:label_day_plural) %>
 </p>
 
 
-
 <p>
-	<label><%= l(:rpp_setting_account_policy_checked_on) =%></label>
+	<label><%= l(:rap_setting_account_policy_checked_on) %></label>
 	<%= @settings[:account_policy_checked_on] %>
 </p>
