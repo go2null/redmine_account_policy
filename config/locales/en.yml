@@ -9,7 +9,7 @@ en:
   rap_setting_password_numerical:     '* Numerical (0-9)'
   rap_setting_password_non_alphanum:  '* Non-alphanumeric (!$#,)'
 
-  rap_error_password_complexity:      'Passwords must contain characters from %{complexity} of the following character classes: upper case (A-Z), lower case (a-z), numbers (0-9) and non-alphanumric (!$#,).'
+  rap_error_password_complexity:      'Passwords must contain characters from %{complexity} of the following character classes: upper case (A-Z), lower case (a-z), numbers (0-9) and non-alphanumeric (!$#,).'
 
 
     # == password expiry == #
