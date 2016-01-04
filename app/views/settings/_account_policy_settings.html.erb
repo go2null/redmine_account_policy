@@ -1,7 +1,9 @@
 <p><label><%= l(:rap_setting_password_complexity) %></label></p>
+ 
+
 <p>
 	<%= l(:rap_setting_password_complexity_a) %>
-	<%= text_field_tag 'settings[password_complexity]', @settings[:password_complexity], size: 1 %>
+    <label><%= l(:exception_handler_label_email_format)%></label><%= select_tag 'settings[password_complexity]', options_for_select([0,1,2,3,4], @settings[:password_complexity]) %>
 	<%= l(:rap_setting_password_complexity_b) %>
 	</br>
 	<%= l(:rap_setting_password_upper_case)   %></br>

@@ -14,10 +14,13 @@ module RedmineAccountPolicy
 				# == password complexity AND password reuse== #
 
 				def validate_password_length_with_account_policy
+					return if password.blank? && generate_password?
 					validate_password_length_without_account_policy
+					
+					if !password.blank?
 
-					errors.add(:base, l(:rap_error_password_complexity)) unless complex_enough?(password)
-
+						errors.add(:base, l(:rap_error_password_complexity, complexity: Setting.plugin_redmine_account_policy[:password_complexity])) unless complex_enough?(password)
+					end		
 					#TODO: min_unique = Setting.plugin_redmine_account_policy[:password_max_age].to_i
 					#errors.add(:base, l(:rap_error_password_reuse, min_unique)) unless unique_enough?(password)
 				end
