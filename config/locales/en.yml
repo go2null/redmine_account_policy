@@ -25,6 +25,7 @@ en:
   rap_setting_password_min_unique_a:  'TODO: (Redmine already does it for last password). Ensure previous'
   rap_setting_password_min_unique_b:  'passwords are unique'
 
+
     # == invalid logins lockout == #
   rap_setting_invalid_logins:         'Invalid Login Attempts'
   rap_setting_invalid_logins_a:       'Lock account for'
@@ -35,6 +36,8 @@ en:
   rap_notice_invalid_logins_remaining: 'attempts remaining.'
 
   rap_notice_account_lockout:         'Your account has been locked due to too many login attempts. Please wait for '
+
+  rap_alt_change_passwords_not_allowed:  'You may not change your password within %{time_of_lockout_in_hours} hours of your last change'
 
   rap_mail_subject_login_failure:     'Failed Login Attempt'
   rap_mail_subject_login_lockout:     'Maximum Login Attempts Reached - Account temporarily locked'
@@ -51,4 +54,3 @@ en:
 
     # == daily cron == #
   rap_setting_account_policy_checked_on: 'Account policies last checked on'
-
