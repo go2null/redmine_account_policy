@@ -58,6 +58,23 @@ module RedmineAccountPolicy
 	module InvalidCredentialsMethods
 		def self.included(base)
 			base.alias_method_chain :invalid_credentials, :account_policy
+			base.alias_method_chain :lost_password, :account_policy
+		end
+
+		def lost_password_with_account_policy
+			lost_password_without_account_policy
+			#on all post requests (whether user is nonexistent, locked, or otherwise),
+			#redirect to signin_path
+			if request.post?
+				#if token param exists, this is an update password request, so
+				#don't flash the lost password email confirmation
+				unless params[:token]
+					#if a redirection is already occurring, do not redirect again to avoid
+					#DoubleRenderErrors -- only available in Rails 3.2+
+					redirect_to signin_path unless performed?	
+		 			flash[:notice] = l(:notice_account_lost_email_sent)
+				end
+			end
 		end
 
 		def invalid_credentials_with_account_policy
