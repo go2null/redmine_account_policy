@@ -121,8 +121,15 @@ module RedmineAccountPolicy
 			#invalid credentials cache), don't enter them into the cache (otherwise they can unlock themselves by failing out and
 			#entering the right password)
 			if username.blank? || lockout_duration == 0 || (counter.nil? && is_locked?(user_from_login))
+				#because code already exposes locked accounts, ensure that 'locked account' message is returned on *every attempt*
+				#otherwise, attackers can determine passwords of locked accounts
+				if (counter.nil? && is_locked?(user_from_login))
+					redirect_to signin_path unless performed?
+					flash[:error] = l(:notice_account_locked)
+				else
 				# pass username back to Redmine's default handler
 				invalid_credentials_without_account_policy
+				end
 				# now let's deal with invalid passwords
 			else
 				if counter.nil?
