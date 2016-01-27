@@ -11,10 +11,11 @@ module RedmineAccountPolicy
 			module DailyCronMethods
 				def run_account_policy_daily_tasks
 					Rails.logger.info { "#{Time.now.utc}: Account Policy: Running daily tasks" }
-
+					
 					expire_old_passwords!             # password expiry
 					lock_unused_accounts!             # lock unused accounts
 					purge_expired_invalid_credentials # failed logins
+					send_expiration_warnings          # expiration warnings	
 
 					# TODO: doesn't persist to db; get's wipes out when save new password_lifetime
 					Setting.plugin_redmine_account_policy.update({account_policy_checked_on: Date.today})
@@ -31,6 +32,27 @@ module RedmineAccountPolicy
 				def expire_old_passwords!
 					User.where(type: 'User', must_change_passwd: false).each do |user|
 						user.update_attribute(:must_change_passwd, true) if user.password_expired?
+						#send expiration notification email
+						Mailer.notify_password_is_expired(user).deliver if user.password_expired? 
+						
+					end
+				end
+				
+				def send_expiration_warnings
+					#if Redmine 2.x, password_max_age doesn't exist, so use the setting in account policy. 
+					#Otherwise, use Redmine core password_max_age
+					password_max_age = (Setting.password_max_age.nil? || Setting.password_max_age.to_i.days==0) ? Setting.plugin_redmine_account_policy[:password_max_age].to_i.days : Setting.password_max_age.to_i.days  	 
+#					password_max_age = Setting.password_max_age.to_i.days || Setting.plugin_redmine_account_policy[:password_max_age].to_i.days	
+					expiration_warn_threshold = Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i 
+				
+					#only run on unlocked users
+					User.where(type: 'User', status: [User::STATUS_REGISTERED, User::STATUS_ACTIVE]).each do |user|
+						
+						#if the user's password is past the expiration warn threshold
+						if (((((user.passwd_changed_on || user.created_on).to_date + password_max_age) - Date.today).to_i) < expiration_warn_threshold) 
+							#send the expiration warning email unless their password has already expired
+							send_warning_password_expiry_mail(user) unless user.password_expired?	
+						end
 					end
 				end
 
@@ -50,6 +72,13 @@ module RedmineAccountPolicy
 					$invalid_credentials_cache.delete_if do |username, counter|
 						counter.is_a?(Time) && counter < Time.now.utc
 					end
+				end
+
+
+				def send_warning_password_expiry_mail(user)
+					return unless Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i > 0 
+
+					Mailer.notify_password_warn_expiry(user).deliver unless user.nil?
 				end
 			end
 		end
