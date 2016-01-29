@@ -8,6 +8,7 @@ module RedmineAccountPolicy
 				base.alias_method_chain :validate_password_length, :account_policy
 				# == password reuse == #
 				base.alias_method_chain :change_password_allowed?, :account_policy
+				base.alias_method_chain :salt_password, :account_policy
 			end
 
 			module InstanceMethods
@@ -56,6 +57,20 @@ module RedmineAccountPolicy
 
 
 				# == password reuse == #
+
+				def salt_password_with_account_policy(clear_password)
+					#current Redmine implementation only tracks current password (does current password 
+					#match new password?), so a new salt is generated every time the password is changed.
+					#If we want to track multiple passwords, the user's salt must not change, so if the setting is enabled, 
+					#skip salt generation
+					if Setting.plugin_redmine_account_policy[:password_min_unique].to_i > 1 
+						self.hashed_password = User.hash_password("#{salt}#{User.hash_password clear_password}")
+						self.passwd_changed_on = Time.now.change(:usec => 0)
+					else
+						salt_password_without_account_policy(clear_password)
+					end 
+					
+				end
 
 				def change_password_allowed_with_account_policy?
 					min_age = Setting.plugin_redmine_account_policy[:password_min_age].to_i
