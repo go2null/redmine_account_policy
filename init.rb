@@ -25,6 +25,7 @@ Redmine::Plugin.register :redmine_account_policy do
 
 		# password expiry policy
 		password_max_age: '90',
+		password_expiry_warn_days: '14',
 
 		# password reuse policy
 		password_min_unique: '1', #TODO: Redmine checks new vs current

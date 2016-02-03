@@ -15,8 +15,17 @@ en:
     # == password expiry == #
   rap_setting_password_expiry:        'Password Expiry'
   rap_setting_password_max_age:       'Maximum password age'
+  rap_setting_password_expiry_warn_a: 'Email warning notifications start'
+  rap_setting_password_expiry_warn_b: 'before password expiration'
   rap_notice_password_expired:        'Your password has expired.'
+ 
+  rap_mail_subject_warn_expiry:       'Warning - Password Expiration in %{days_left} Days'
+  rap_mail_body_warn_expiry_header:   'Password Expiration Warning'
+  rap_mail_body_warn_expiry:          'The password of your account "%{name}" [%{login}] will expire in %{days_left} days. Please log in and update your password before this occurs.' 
 
+  rap_mail_subject_is_expired:       'Password Expired'
+  rap_mail_body_is_expired_header:   'Password Expiration Notice'
+  rap_mail_body_is_expired:          'The password of your account "%{name}" [%{login}] has expired.' 
 
     # == password reuse == #
   rap_setting_password_reuse:         'Password Reuse'
