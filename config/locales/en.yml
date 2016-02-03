@@ -45,6 +45,9 @@ en:
   rap_mail_body_login_lockout_header: 'Maximum allowed login attempts reached'
   rap_mail_body_login_failure:        'An unsuccessful attempt to login to your account was made from %{ip_address}.'
   rap_mail_body_login_lockout:        'Your account "%{name}" [%{login}] reached its maximum allowed number fo failed login attempts.  The last attempt was from %{ip_address}.  Your account has been locked for %{lockout_duration} minutes.'
+ 
+  rap_account_locked_due_to_account_policy: 'Unlock (locked due to max fails - please hover)'
+  rap_alt_account_locked_due_to_account_policy: 'This account has been locked because it has reached the maximum number of failed login attempts. To lock this account such that the user cannot unlock themselves once their timeout expires, please unlock and re-lock this user account.'
 
 
     # == unused accounts == #

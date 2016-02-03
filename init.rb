@@ -6,6 +6,7 @@ require_dependency 'redmine_account_policy/mailer_patch'
 require_dependency 'redmine_account_policy/my_controller_patch'
 require_dependency 'redmine_account_policy/user_patch'
 require_dependency 'redmine_account_policy/hooks'
+require_dependency 'redmine_account_policy/users_helper_patch'
 
 Redmine::Plugin.register :redmine_account_policy do
 	name 'Redmine Account Policy plugin'
