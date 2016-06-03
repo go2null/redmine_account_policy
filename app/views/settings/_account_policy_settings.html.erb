@@ -1,9 +1,10 @@
+<p><%= l(:rap_setting_warn_description) %></p>
 <p><label><%= l(:rap_setting_password_complexity) %></label></p>
  
 
 <p>
 	<%= l(:rap_setting_password_complexity_a) %>
-    <label><%= l(:exception_handler_label_email_format)%></label><%= select_tag 'settings[password_complexity]', options_for_select([0,1,2,3,4], @settings[:password_complexity]) %>
+    <%= select_tag 'settings[password_complexity]', options_for_select([0,1,2,3,4], @settings[:password_complexity]) %>
 	<%= l(:rap_setting_password_complexity_b) %>
 	</br>
 	<%= l(:rap_setting_password_upper_case)   %></br>
@@ -29,7 +30,7 @@
 <p><label><%= l(:rap_setting_password_reuse) %></label></p>
 <p>
 	<%= l(:rap_setting_password_min_unique_a) %>
-	<%= number_field_tag 'settings[password_min_unique]', @settings[:password_min_unique], min: 0, max: 99 %>
+	<%= number_field_tag 'settings[password_min_unique]', @settings[:password_min_unique], min: 1, max: 30%>
 	<%= l(:rap_setting_password_min_unique_b) %>
 </p>
 <p>
@@ -64,5 +65,5 @@
 
 <p>
 	<label><%= l(:rap_setting_account_policy_checked_on) %></label>
-	<%= @settings[:account_policy_checked_on] %>
+	<%= text_field_tag('settings[account_policy_checked_on]', Setting.plugin_redmine_account_policy[:account_policy_checked_on], readonly: true, style: 'text-align: center;color:#5f5f5f;border:transparent')%>
 </p>

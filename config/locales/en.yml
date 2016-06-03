@@ -1,6 +1,7 @@
 # English strings go here for Rails i18n
 en:
-  # == password complexity == #
+  rap_setting_warn_description:       'Password account policy rules will not behave correctly if authentication is not set to required in the Redmine Settings -> Authentication tab!'
+    # == password complexity == #
   rap_setting_password_complexity:    'Password Complexity'
   rap_setting_password_complexity_a:  'Passwords must contain at least'
   rap_setting_password_complexity_b:  'of the following character classes'
@@ -18,7 +19,7 @@ en:
   rap_setting_password_expiry_warn_a: 'Email warning notifications start'
   rap_setting_password_expiry_warn_b: 'before password expiration'
   rap_notice_password_expired:        'Your password has expired.'
- 
+
   rap_mail_subject_warn_expiry:       'Warning - Password Expiration in %{days_left} Days'
   rap_mail_body_warn_expiry_header:   'Password Expiration Warning'
   rap_mail_body_warn_expiry:          'The password of your account "%{name}" [%{login}] will expire in %{days_left} days. Please log in and update your password before this occurs.' 
@@ -54,7 +55,7 @@ en:
   rap_mail_body_login_lockout_header: 'Maximum allowed login attempts reached'
   rap_mail_body_login_failure:        'An unsuccessful attempt to login to your account was made from %{ip_address}.'
   rap_mail_body_login_lockout:        'Your account "%{name}" [%{login}] reached its maximum allowed number fo failed login attempts.  The last attempt was from %{ip_address}.  Your account has been locked for %{lockout_duration} minutes.'
- 
+
   rap_account_locked_due_to_account_policy: 'Unlock (locked due to max fails - please hover)'
   rap_alt_account_locked_due_to_account_policy: 'This account has been locked because it has reached the maximum number of failed login attempts. To lock this account such that the user cannot unlock themselves once their timeout expires, please unlock and re-lock this user account.'
 
@@ -66,3 +67,5 @@ en:
 
     # == daily cron == #
   rap_setting_account_policy_checked_on: 'Account policies last checked on'
+
+  notice_account_lost_email_sent:        'An email with instructions to choose a new password will be sent to you if this account exists and is unlocked!' 
