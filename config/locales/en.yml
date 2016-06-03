@@ -1,6 +1,7 @@
 # English strings go here for Rails i18n
 en:
-  # == password complexity == #
+  rap_setting_warn_description:       'Password account policy rules will not behave correctly if authentication is not set to required in the Redmine Settings -> Authentication tab!'
+    # == password complexity == #
   rap_setting_password_complexity:    'Password Complexity'
   rap_setting_password_complexity_a:  'Passwords must contain at least'
   rap_setting_password_complexity_b:  'of the following character classes'
@@ -9,14 +10,23 @@ en:
   rap_setting_password_numerical:     '* Numerical (0-9)'
   rap_setting_password_non_alphanum:  '* Non-alphanumeric (!$#,)'
 
-  rap_error_password_complexity:      'Passwords must contain characters from %{complexity} of the following character classes: upper case (A-Z), lower case (a-z), numbers (0-9) and non-alphanumric (!$#,).'
+  rap_error_password_complexity:      'Passwords must contain characters from %{complexity} of the following character classes: upper case (A-Z), lower case (a-z), numbers (0-9) and non-alphanumeric (!$#,).'
 
 
     # == password expiry == #
   rap_setting_password_expiry:        'Password Expiry'
   rap_setting_password_max_age:       'Maximum password age'
+  rap_setting_password_expiry_warn_a: 'Email warning notifications start'
+  rap_setting_password_expiry_warn_b: 'before password expiration'
   rap_notice_password_expired:        'Your password has expired.'
 
+  rap_mail_subject_warn_expiry:       'Warning - Password Expiration in %{days_left} Days'
+  rap_mail_body_warn_expiry_header:   'Password Expiration Warning'
+  rap_mail_body_warn_expiry:          'The password of your account "%{name}" [%{login}] will expire in %{days_left} days. Please log in and update your password before this occurs.' 
+
+  rap_mail_subject_is_expired:       'Password Expired'
+  rap_mail_body_is_expired_header:   'Password Expiration Notice'
+  rap_mail_body_is_expired:          'The password of your account "%{name}" [%{login}] has expired.' 
 
     # == password reuse == #
   rap_setting_password_reuse:         'Password Reuse'
@@ -24,6 +34,7 @@ en:
   rap_setting_password_min_age:       'Prevent changing password before'
   rap_setting_password_min_unique_a:  'TODO: (Redmine already does it for last password). Ensure previous'
   rap_setting_password_min_unique_b:  'passwords are unique'
+
 
     # == invalid logins lockout == #
   rap_setting_invalid_logins:         'Invalid Login Attempts'
@@ -36,12 +47,17 @@ en:
 
   rap_notice_account_lockout:         'Your account has been locked due to too many login attempts. Please wait for '
 
+  rap_alt_change_passwords_not_allowed:  'You may not change your password within %{time_of_lockout_in_hours} hours of your last change'
+
   rap_mail_subject_login_failure:     'Failed Login Attempt'
   rap_mail_subject_login_lockout:     'Maximum Login Attempts Reached - Account temporarily locked'
   rap_mail_body_login_failure_header: 'Failed login attempt'
   rap_mail_body_login_lockout_header: 'Maximum allowed login attempts reached'
   rap_mail_body_login_failure:        'An unsuccessful attempt to login to your account was made from %{ip_address}.'
   rap_mail_body_login_lockout:        'Your account "%{name}" [%{login}] reached its maximum allowed number fo failed login attempts.  The last attempt was from %{ip_address}.  Your account has been locked for %{lockout_duration} minutes.'
+
+  rap_account_locked_due_to_account_policy: 'Unlock (locked due to max fails - please hover)'
+  rap_alt_account_locked_due_to_account_policy: 'This account has been locked because it has reached the maximum number of failed login attempts. To lock this account such that the user cannot unlock themselves once their timeout expires, please unlock and re-lock this user account.'
 
 
     # == unused accounts == #
@@ -52,3 +68,4 @@ en:
     # == daily cron == #
   rap_setting_account_policy_checked_on: 'Account policies last checked on'
 
+  notice_account_lost_email_sent:        'An email with instructions to choose a new password will be sent to you if this account exists and is unlocked!' 
