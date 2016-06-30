@@ -17,7 +17,7 @@ module RedmineAccountPolicy
           purge_expired_invalid_credentials # failed logins
           send_expiration_warnings          # expiration warnings	
 
-          Setting.plugin_redmine_account_policy.update({account_policy_checked_on: Date.today})
+          Setting.plugin_redmine_account_policy.update({account_policy_checked_on: Date.today.strftime("%Y-%m-%d")})
         end
 
         # enable must_change_passwd for all expired users.
@@ -88,8 +88,7 @@ module RedmineAccountPolicy
 
         def already_ran_today?
           last_run = Setting.plugin_redmine_account_policy[:account_policy_checked_on]
-          return false if last_run.nil?
-          last_run == Date.today ? true : false
+          last_run == Date.today.strftime("%Y-%m-%d") ? true : false
         end
 
         def should_send_warning?(user)
