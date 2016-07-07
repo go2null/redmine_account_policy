@@ -20,10 +20,10 @@ class AccountControllerTest < ActionController::TestCase
   test "password_should_expire_if_past_expiration_age" do
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron	
+    run_daily_cron_with_reset	
 
     assert mock_user.must_change_passwd?,
-      "Should have must_change_passwd set to true #{@alice.inspect}"
+      "Should have must_change_passwd set to true #{mock_user.inspect}"
   end
 
 
@@ -31,10 +31,10 @@ class AccountControllerTest < ActionController::TestCase
   test "password_should_not_expire_if_before_expiration_age" do
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired + 1.days)
 
-    run_daily_cron	
+    run_daily_cron_with_reset	
 
     assert !mock_user.must_change_passwd?,
-      "Should have must_change_passwd set to false #{@alice.inspect}"
+      "Should have must_change_passwd set to false #{mock_user.inspect}"
   end
 
 
@@ -44,10 +44,10 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron	
+    run_daily_cron_with_reset	
 
     assert !mock_user.must_change_passwd?,
-      "Expiry off, must_change_passwd should be false #{@alice.inspect}"
+      "Expiry off, must_change_passwd should be false #{mock_user.inspect}"
   end
 
 
@@ -56,7 +56,7 @@ class AccountControllerTest < ActionController::TestCase
   test "if_password_expired_send_mail_to_user_if_setting_on" do
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert all_mail_recipients.include?(@alice.mail),
       "User should be sent email on pwd expiry if setting on"
@@ -70,7 +70,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert !all_mail_recipients.include?(@alice.mail),
       "User should not be sent email on pwd expiry if setting off"
@@ -104,7 +104,7 @@ class AccountControllerTest < ActionController::TestCase
 
     @last_changed_date = Time.now.utc - (@expiry_days - @warn_threshold - 1).days
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert !all_mail_recipients.include?(@alice.mail),
       'No warn mails sent if out of warn range'
@@ -119,7 +119,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.update_column(:passwd_changed_on, @last_changed_date)
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert !all_mail_recipients.include?(@alice.mail),
       "User should not be sent warn emails if setting off"
@@ -183,7 +183,7 @@ class AccountControllerTest < ActionController::TestCase
     ActionMailer::Base.deliveries = []
     @mail_subject = ""
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     ActionMailer::Base.deliveries.each do |mail|
       if mail_recipients(mail).include?(@alice.mail)
@@ -201,7 +201,7 @@ class AccountControllerTest < ActionController::TestCase
     ActionMailer::Base.deliveries = []
     @mail_subject = ""
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     ActionMailer::Base.deliveries.each do |mail|
       if mail_recipients(mail).include?(@alice.mail)

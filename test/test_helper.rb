@@ -28,12 +28,8 @@ module TestSetupMethods
     .update({account_policy_checked_on: nil })
   end
 
-  # creates a mock user
-  def create_mock_user(login = 'alice',
-                       pwd = repeat_str('1234567890'),
-                       email = 'alice@doe.com')
-
-    @mock_user = User.create() do |u|
+  def create_user(login, pwd, email)
+    mock_user = User.create() do |u|
       u.login = login
       u.password = pwd
       u.password_confirmation = pwd
@@ -47,13 +43,20 @@ module TestSetupMethods
       u.status = 1
       u.auth_source_id = nil
     end
-
     # block below prints out all errors if validation fails
-    if @mock_user.errors.any?
-      @mock_user.errors.each do |attribute, message|
+    if mock_user.errors.any?
+      mock_user.errors.each do |attribute, message|
         puts "Error - #{attribute} : #{message}"
       end
     end
+    mock_user
+  end
+
+  # creates a mock user
+  def create_mock_user(login = 'alice',
+                       pwd = repeat_str('1234567890'),
+                       email = 'alice@doe.com')
+    @mock_user = create_user(login, pwd, email)
     @mock_user
   end
 
@@ -65,33 +68,19 @@ end
 
 
 module TestDailyMethods
+  include TestSetupMethods
+
+  def reset_daily_cron
+    Setting.plugin_redmine_account_policy.update({account_policy_checked_on: nil})
+  end
+
   # runs whatever task the plugin uses to lock expired users
   def run_daily_cron
-    Setting.plugin_redmine_account_policy
-    .update({account_policy_checked_on: nil})
     @mock_bob_login = 'bob'
     @mock_bob_password = '1234567890'
 
     if User.find_by_login(@mock_bob_login).nil?
-      @bob = User.create() do |u|
-        u.login = @mock_bob_login
-        u.password = @mock_bob_password
-        u.password_confirmation = @mock_bob_password
-        u.firstname = @mock_bob_login
-        u.lastname = 'doe'
-        u.mail = 'bob@doe.com'
-        u.language = 'en'
-        u.mail_notification = 'only_my_events'
-        u.parent_id = 1
-        u.status = 1
-        u.auth_source_id = nil
-      end
-
-      if @bob.errors.any?
-        @bob.errors.each do |attribute, message|
-          puts "Validation - #{attribute} : #{message}"
-        end
-      end
+      @bob = create_user(@mock_bob_login, @mock_bob_password, 'bob@doe.com')
     end
 
     post(:login, {
@@ -99,6 +88,11 @@ module TestDailyMethods
       :password => @mock_bob_password})
     assert_redirected_to my_page_path,
       "Should have been able to login"
+  end
+
+  def run_daily_cron_with_reset
+    reset_daily_cron
+    run_daily_cron
   end
 end
 
