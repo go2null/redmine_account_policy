@@ -4,44 +4,33 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 module TestSetupMethods
   # reset all settings
   def reset_settings
-    Setting.plugin_redmine_account_policy
-    .update({password_complexity: 0})
-    Setting.plugin_redmine_account_policy
-    .update({password_max_age: 0})
-    Setting.plugin_redmine_account_policy
-    .update({password_min_unique: 0})
-    Setting.plugin_redmine_account_policy
-    .update({password_min_unique: 0})
-    Setting.plugin_redmine_account_policy
-    .update({password_min_age: 0})
-    Setting.plugin_redmine_account_policy
-    .update({account_lockout_duration: 0})
-    Setting.plugin_redmine_account_policy
-    .update({account_lockout_threshold: 0})
-    Setting.plugin_redmine_account_policy
-    .update({notify_on_failure: 0})
-    Setting.plugin_redmine_account_policy
-    .update({notify_on_lockout: 0})
-    Setting.plugin_redmine_account_policy
-    .update({unused_account_max_age: 0})
-    Setting.plugin_redmine_account_policy
-    .update({account_policy_checked_on: nil })
+    Setting.plugin_redmine_account_policy.update({password_complexity: 0})
+    Setting.plugin_redmine_account_policy.update({password_max_age: 0})
+    Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
+    Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
+    Setting.plugin_redmine_account_policy.update({password_min_age: 0})
+    Setting.plugin_redmine_account_policy.update({account_lockout_duration: 0})
+    Setting.plugin_redmine_account_policy.update({account_lockout_threshold: 0})
+    Setting.plugin_redmine_account_policy.update({notify_on_failure: 0})
+    Setting.plugin_redmine_account_policy.update({notify_on_lockout: 0})
+    Setting.plugin_redmine_account_policy.update({unused_account_max_age: 0})
+    Setting.plugin_redmine_account_policy.update({account_policy_checked_on: nil })
   end
 
   def create_user(login, pwd, email)
     mock_user = User.create() do |u|
-      u.login = login
-      u.password = pwd
+      u.login                 = login
+      u.password              = pwd
       u.password_confirmation = pwd
-      u.firstname = login
-      u.lastname = 'doe'
-      u.mail = email
-      u.language = 'en'
-      u.mail_notification = 'only_my_events'
-      u.must_change_passwd = false
-      u.parent_id = 1 if u.respond_to? :parent_id= # check for my_users
-      u.status = 1
-      u.auth_source_id = nil
+      u.firstname             = login
+      u.lastname              = 'doe'
+      u.mail                  = email
+      u.language              = 'en'
+      u.mail_notification     = 'only_my_events'
+      u.must_change_passwd    = false
+      u.parent_id             = 1 if u.respond_to?(:parent_id=) # check for my_users
+      u.status                = 1
+      u.auth_source_id        = nil
     end
     # block below prints out all errors if validation fails
     if mock_user.errors.any?
@@ -97,7 +86,7 @@ module TestDailyMethods
 end
 
 module TestHelperMethods
-  # returns when the user corresponding to the given login 
+  # returns when the user corresponding to the given login
   # last changed their password
   def get_pwd_change_date(login)
     mock_user.passwd_changed_on
@@ -161,7 +150,7 @@ module TestHelperMethods
 end
 
 module TestMailerMethods
-  # returns a string array of all to, bcc, and cc recipients in 
+  # returns a string array of all to, bcc, and cc recipients in
   # the mail deliveries
   def all_mail_recipients
     recipients = Array.new
@@ -197,7 +186,7 @@ module TestMailerMethods
     mail.bcc.each do |bcc|
       all_recipients << bcc.to_s
     end
-    all_recipients	
+    all_recipients
   end
 
   # check if input recipients are in the input mail
@@ -209,7 +198,7 @@ module TestMailerMethods
 
   # setting mailer variables for testing
   def set_mailer_test_variables
-    # sets delivery method to test mode so email is not really sent 
+    # sets delivery method to test mode so email is not really sent
     ActionMailer::Base.delivery_method = :test
     # ensures mail will be sent using the ActionMailer
     ActionMailer::Base.perform_deliveries = true
