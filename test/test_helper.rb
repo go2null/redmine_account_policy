@@ -39,7 +39,7 @@ module TestSetupMethods
       u.language = 'en'
       u.mail_notification = 'only_my_events'
       u.must_change_passwd = false
-      u.parent_id = 1
+      u.parent_id = 1 if u.respond_to? :parent_id= # check for my_users
       u.status = 1
       u.auth_source_id = nil
     end
