@@ -1,0 +1,71 @@
+# English strings go here for Rails i18n
+pt-BR:
+  rap_setting_warn_description:       'As regras do Password account policy não funcionarão corretamente se a autenticação não for obrigatória na aba Configurações -> Autenticação!'
+    # == password complexity == #
+  rap_setting_password_complexity:    'Complexidade da Senha'
+  rap_setting_password_complexity_a:  'Senhas devem ter no mínimo'
+  rap_setting_password_complexity_b:  'das classes abaixo'
+  rap_setting_password_upper_case:    '* Maiúsculas (A-Z)'
+  rap_setting_password_lower_case:    '* Minúsculas (a-z)'
+  rap_setting_password_numerical:     '* Numerais (0-9)'
+  rap_setting_password_non_alphanum:  '* Caracteres Especiais (!$#,)'
+
+  rap_error_password_complexity:      'As senhas devem ter caracteres de %{complexity} das seguintes classes: Maiúsculas (A-Z), Minúsculas (a-z), números (0-9) e Caracteres Especiais (!$#,).'
+
+
+    # == password expiry == #
+  rap_setting_password_expiry:        'Expirar Senha'
+  rap_setting_password_max_age:       'Prazo máximo'
+  rap_setting_password_expiry_warn_a: 'Notificar por email desde'
+  rap_setting_password_expiry_warn_b: 'anter de expirar a senha'
+  rap_notice_password_expired:        'Sua senha expirou.'
+
+  rap_mail_subject_warn_expiry:       'Atenção - Sua senha vai expirar em %{days_left} dias'
+  rap_mail_body_warn_expiry_header:   'Atenção Para a Expiração da Senha'
+  rap_mail_body_warn_expiry:          'A senha da conta "%{name}" [%{login}] vai expirar em %{days_left} dias. Favor se autenticar e alterá-la antes disso.' 
+
+  rap_mail_subject_is_expired:       'Senha Expirada'
+  rap_mail_body_is_expired_header:   'Notificação de Expiração de Senha'
+  rap_mail_body_is_expired:          'A senha da conta "%{name}" [%{login}] expirou.' 
+
+    # == password reuse == #
+  rap_setting_password_reuse:         'Reuso de Senha'
+  rap_notice_password_reuse:          'Sua nova senha deve ser diferente das suas últimas %{min_unique} senhas'
+  rap_setting_password_min_age:       'Não deixar trocar antes de'
+  rap_setting_password_min_unique_a:  'TODO: (Redmine já faz isto para última senha). Verifique que as últimas'
+  rap_setting_password_min_unique_b:  'senhas sejam diferentes'
+
+
+    # == invalid logins lockout == #
+  rap_setting_invalid_logins:         'Tentativas de Autenticação Inválidas'
+  rap_setting_invalid_logins_a:       'Bloquear conta por'
+  rap_setting_invalid_logins_b:       'minutos após'
+  rap_setting_invalid_logins_c:       'falhas de autenticação'
+  rap_setting_notify_on_failure:      'Notificar usuário a cada falha'
+  rap_setting_notify_on_lockout:      'Usuários e Administradores sempre são notificados quando a conta é bloqueada.'
+  rap_notice_invalid_logins_remaining: 'tentativas sobrando.'
+
+  rap_notice_account_lockout:         'Sua conta for bloqueada por exceder o número máximo de tentativas. Espere '
+
+  rap_alt_change_passwords_not_allowed:  'Você não pode alterar a senha por %{time_of_lockout_in_hours} horas após a última alteração'
+
+  rap_mail_subject_login_failure:     'Autenticação Falhou'
+  rap_mail_subject_login_lockout:     'Máximo de Tentativas de Autenticação Alcançado - Conta temporariamente bloqueada'
+  rap_mail_body_login_failure_header: 'Tentativa de autenticação falhou'
+  rap_mail_body_login_lockout_header: 'Máximo de tentativas de autenticação alcançado'
+  rap_mail_body_login_failure:        'Ocorreu uma falha de autenticação na sua conta a partir de %{ip_address}.'
+  rap_mail_body_login_lockout:        'Sua conta "%{name}" [%{login}] alcançou o máximo de tentativas de autenticação.  A última tentativa foi feita de %{ip_address}.  Sua conta foi bloqueada por %{lockout_duration} minutos.'
+
+  rap_account_locked_due_to_account_policy: 'Desbloquear (bloqueado por máximo de tentativas - passe o mouse)'
+  rap_alt_account_locked_due_to_account_policy: 'Esta conta foi bloqueada porque atingiu o máximo de tentativas de autenticação. Para bloquear a conta definitivamente, desbloqueie e bloqueie esta conta.'
+
+
+    # == unused accounts == #
+  rap_setting_unused_account:         'Contas Ociosas'
+  rap_setting_unused_account_max_age: 'Desativar contas não usadas por'
+
+
+    # == daily cron == #
+  rap_setting_account_policy_checked_on: 'Políticas de conta checadas em'
+
+  notice_account_lost_email_sent:        'Um email com instruções para alteração da senha será enviado se esta conta existir e estiver desbloqueada!' 
