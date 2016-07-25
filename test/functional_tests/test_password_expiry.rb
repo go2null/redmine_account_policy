@@ -12,7 +12,10 @@ class AccountControllerTest < ActionController::TestCase
     reset_settings
 
     @alice = create_mock_user
+
     Setting.plugin_redmine_account_policy.update({password_max_age: 90})
+
+    @cron_repeats = 100
   end
 
 
@@ -20,10 +23,23 @@ class AccountControllerTest < ActionController::TestCase
   test "password_should_expire_if_past_expiration_age" do
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron	
+    run_daily_cron_with_reset
 
     assert mock_user.must_change_passwd?,
-      "Should have must_change_passwd set to true #{@alice.inspect}"
+      "Should have must_change_passwd set to true #{mock_user.inspect}"
+  end
+
+
+  # tests that repeated daily crons will not expire a password
+  test "repeated_crons_do_not_expire_old_passwords" do
+    run_daily_cron_with_reset
+
+    mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
+
+    @cron_repeats.times{ run_daily_cron }
+
+    refute mock_user.must_change_passwd?,
+      "Must change passwd should not be set to true - #{mock_user.inspect}"
   end
 
 
@@ -31,10 +47,10 @@ class AccountControllerTest < ActionController::TestCase
   test "password_should_not_expire_if_before_expiration_age" do
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired + 1.days)
 
-    run_daily_cron	
+    run_daily_cron_with_reset
 
     assert !mock_user.must_change_passwd?,
-      "Should have must_change_passwd set to false #{@alice.inspect}"
+      "Should have must_change_passwd set to false #{mock_user.inspect}"
   end
 
 
@@ -44,33 +60,48 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron	
+    run_daily_cron_with_reset
 
     assert !mock_user.must_change_passwd?,
-      "Expiry off, must_change_passwd should be false #{@alice.inspect}"
+      "Expiry off, must_change_passwd should be false #{mock_user.inspect}"
   end
 
 
-  # when password expires, tests that an email is sent to the user 
+  # when password expires, tests that an email is sent to the user
   # if the setting is on
   test "if_password_expired_send_mail_to_user_if_setting_on" do
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert all_mail_recipients.include?(@alice.mail),
       "User should be sent email on pwd expiry if setting on"
   end
 
 
+  # tests that repeated daily crons do not send multiple emails
+  test "repeated_crons_do_not_send_expiration_warn_mails_to_user" do
+    run_daily_cron_with_reset
+
+    mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
+
+    @cron_repeats.times{ run_daily_cron }
+
+    @mail_subject = find_a_mail_subject_for_user(@alice)
+
+    assert @mail_subject.blank?,
+      "User should not be sent email on repeated crons - #{@mail_subject}"
+  end
+
+
   # when password expires, tests that an email is not sent to the user
-  # if the setting is off 
+  # if the setting is off
   test "if_password_expired_dont_send_mail_to_user_if_setting_off" do
     Setting.plugin_redmine_account_policy.update({password_max_age: 0})
 
     mock_user.update_column(:passwd_changed_on, pwd_date_if_now_expired - 1.days)
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert !all_mail_recipients.include?(@alice.mail),
       "User should not be sent email on pwd expiry if setting off"
@@ -104,7 +135,7 @@ class AccountControllerTest < ActionController::TestCase
 
     @last_changed_date = Time.now.utc - (@expiry_days - @warn_threshold - 1).days
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert !all_mail_recipients.include?(@alice.mail),
       'No warn mails sent if out of warn range'
@@ -119,7 +150,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.update_column(:passwd_changed_on, @last_changed_date)
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
     assert !all_mail_recipients.include?(@alice.mail),
       "User should not be sent warn emails if setting off"
@@ -181,15 +212,10 @@ class AccountControllerTest < ActionController::TestCase
   # successfully sends expiration warn mails and verifies they are correct
   def send_successful_expiration_warn_mail_for(expiry_days)
     ActionMailer::Base.deliveries = []
-    @mail_subject = ""
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
-    ActionMailer::Base.deliveries.each do |mail|
-      if mail_recipients(mail).include?(@alice.mail)
-        @mail_subject = mail.subject.to_s
-      end
-    end
+    @mail_subject = find_a_mail_subject_for_user(@alice)
 
     days_left = expiry_days - (Date.today - get_pwd_change_date(@alice.login).to_date).to_i
 
@@ -199,15 +225,10 @@ class AccountControllerTest < ActionController::TestCase
 
   def send_no_expiration_warn_mail_for(expiry_days)
     ActionMailer::Base.deliveries = []
-    @mail_subject = ""
 
-    run_daily_cron
+    run_daily_cron_with_reset
 
-    ActionMailer::Base.deliveries.each do |mail|
-      if mail_recipients(mail).include?(@alice.mail)
-        @mail_subject = mail.subject.to_s
-      end
-    end
+    @mail_subject = find_a_mail_subject_for_user(@alice)
 
     assert @mail_subject.blank?,
       "Subject should not exist : #{@mail_subject}"
@@ -220,7 +241,7 @@ class AccountControllerTest < ActionController::TestCase
 
   def days_before_expiry(user)
     @password_max_age = Setting.plugin_redmine_account_policy[:password_max_age].to_i.days
-    (last_change_pwd(user) + @password_max_age - Date.today).to_i 
+    (last_change_pwd(user) + @password_max_age - Date.today).to_i
   end
 
   def last_change_pwd(user)
@@ -231,5 +252,15 @@ class AccountControllerTest < ActionController::TestCase
     @warn_threshold = Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i
     days_left = days_before_expiry(user)
     days_left == @warn_threshold || (@warn_threshold - days_left) % 7 == 0 || days_left == 1
+  end
+
+  def find_a_mail_subject_for_user(user)
+    mail_subject = ''
+    ActionMailer::Base.deliveries.each do |mail|
+      if mail_recipients(mail).include?(user.mail)
+        mail_subject = mail.subject.to_s
+      end
+    end
+    mail_subject
   end
 end

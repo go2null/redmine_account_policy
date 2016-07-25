@@ -5,6 +5,7 @@ class AccountControllerTest < ActionController::TestCase
   include TestSetupMethods
   include TestHelperMethods
   include TestMailerMethods
+  include TestDailyMethods
 
   def setup
     set_mailer_test_variables
@@ -23,6 +24,8 @@ class AccountControllerTest < ActionController::TestCase
 
     @attempts = 5
     @duration = 1
+    @max_age = 90
+    @cron_repeats = 100
 
     @to_array = Array.new
 
@@ -34,6 +37,37 @@ class AccountControllerTest < ActionController::TestCase
   def teardown
     print_flashes
   end
+
+
+  # tests unused account lockout for daily cron
+  test "unused_account_lockout_on_daily_cron" do
+    Setting.plugin_redmine_account_policy.update({unused_account_max_age: @max_age})
+    last_login_if_unused = Date.today - (@max_age + 1).days
+
+    mock_user.update_column(:last_login_on, last_login_if_unused)
+
+    run_daily_cron_with_reset
+
+    assert mock_user.locked?,
+      "Daily cron locked unused user - #{mock_user.inspect}"
+  end
+
+
+  # tests that repeated daily crons do not lock unused accounts
+  test "repeated_crons_do_not_lock_unused_accounts" do
+    Setting.plugin_redmine_account_policy.update({unused_account_max_age: @max_age})
+    last_login_if_unused = Date.today - (@max_age + 1).days
+
+    run_daily_cron_with_reset
+
+    mock_user.update_column(:last_login_on, last_login_if_unused)
+
+    @cron_repeats.times{ run_daily_cron }
+
+    refute mock_user.locked?,
+      "Daily cron should not have locked user - #{mock_user.inspect}"
+  end
+
 
   # tests lockout after X number of attempts
   test "temporary_lockout_on_max_fails" do
@@ -54,15 +88,15 @@ class AccountControllerTest < ActionController::TestCase
     sleep (@duration * 60) + 10
 
     post(:login, {
-      :username => @alice.login, 
+      :username => @alice.login,
       :password => @alice.password})
 
-    assert !mock_user.locked?, 
+    assert !mock_user.locked?,
       "Should unlock after lock - #{mock_user.inspect}"
   end
 
   # tests that user cannot unlock themselves with correct credentials
-  # even after timeout ends if they've been admin locked 
+  # even after timeout ends if they've been admin locked
   # (lcoked by admin instead of plugin)
   test "dont_unlock_after_timeout_if_perm_locked_before_temp_lock" do
     mock_user.lock!
@@ -73,10 +107,10 @@ class AccountControllerTest < ActionController::TestCase
     sleep (@duration * 60) + 10
 
     post(:login, {
-      :username => @alice.login, 
+      :username => @alice.login,
       :password => @alice.password})
 
-    assert mock_user.locked?, 
+    assert mock_user.locked?,
       "Should unlock after lock - #{mock_user.inspect}"
   end
 
@@ -91,11 +125,11 @@ class AccountControllerTest < ActionController::TestCase
 
 
     post(:login, {
-      :username => @alice.login, 
+      :username => @alice.login,
       :password => @alice.password})
 
 
-    assert mock_user.locked?, 
+    assert mock_user.locked?,
       "Admin lock during timeout - #{mock_user.inspect}"
   end
 
@@ -112,8 +146,8 @@ class AccountControllerTest < ActionController::TestCase
     assert_equal real_flash, fake_flash, 'Spoof flashes'
   end
 
-  # tests that the post timeout flash behaves identically 
-  # for valid and invalid users 
+  # tests that the post timeout flash behaves identically
+  # for valid and invalid users
   test "show_same_flash_after_timeout_for_valid_and_invalid_users" do
     # get first flash from bad login, as if the user is attempting
     # to log in for the first time or after a timeout
@@ -129,9 +163,9 @@ class AccountControllerTest < ActionController::TestCase
 
     make_bad_login_attempts_until_one_before(2)
     post_timeout_flash = flash[:error]
-    assert_equal first_flash, post_timeout_flash, 
+    assert_equal first_flash, post_timeout_flash,
       'Spoof account unlock after timeout'
-  end	
+  end
 
 
   # tests that lockout count is reset on a successful signin
@@ -140,7 +174,7 @@ class AccountControllerTest < ActionController::TestCase
     make_bad_login_attempts_until_one_before(@attempts)
 
     post(:login, {
-      :username => @alice.login, 
+      :username => @alice.login,
       :password => @alice.password})
 
     assert !mock_user.locked?, "Unlocked, reset count - #{mock_user.inspect}"
@@ -191,7 +225,7 @@ class AccountControllerTest < ActionController::TestCase
 
     post(:lost_password, {
       :token => @token.value,
-      :new_password => repeat_str('alice'), 
+      :new_password => repeat_str('alice'),
       :new_password_confirmation => repeat_str('alice')})
 
     assert_redirected_to signin_path,
@@ -199,7 +233,7 @@ class AccountControllerTest < ActionController::TestCase
   end
 
 
-  
+
   # lost password requests dont reset the number of login fails so far
   test "dont_reset_countdown_fails_before_lock_on_lost_password_request" do
     make_bad_login_attempts_until_one_before(@attempts)
@@ -233,7 +267,7 @@ class AccountControllerTest < ActionController::TestCase
 
     post(:lost_password, {
       :token => @token.value,
-      :new_password => repeat_str('alice'), 
+      :new_password => repeat_str('alice'),
       :new_password_confirmation => repeat_str('alice')})
 
     assert_redirected_to signin_path,
@@ -263,7 +297,7 @@ class AccountControllerTest < ActionController::TestCase
 
     post(:lost_password, {
       :token => @token.value,
-      :new_password => repeat_str('alice'), 
+      :new_password => repeat_str('alice'),
       :new_password_confirmation => repeat_str('alice')})
 
     assert_redirected_to home_url,
@@ -279,7 +313,7 @@ class AccountControllerTest < ActionController::TestCase
 
     post(:lost_password, {
       :token => @token.value,
-      :new_password => repeat_str('alice'), 
+      :new_password => repeat_str('alice'),
       :new_password_confirmation => repeat_str('alice')})
 
     assert_redirected_to signin_path,
@@ -292,11 +326,11 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.activate!
 
-    assert !mock_user.locked?, 
+    assert !mock_user.locked?,
       "Should be unlocked after temp-lock - #{mock_user.inspect}"
   end
 
-  # confirms ('admin') locked users can be unlocked (core behaviour) 
+  # confirms ('admin') locked users can be unlocked (core behaviour)
   test "user_can_be_unlocked_if_perm_locked" do
     mock_user.lock!
 
@@ -304,7 +338,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.activate!
 
-    assert !mock_user.locked?, 
+    assert !mock_user.locked?,
       "Should be unlocked after admin-lock - #{mock_user.inspect}"
   end
 
@@ -314,7 +348,7 @@ class AccountControllerTest < ActionController::TestCase
     Setting.plugin_redmine_account_policy.update({notify_on_failure: 'on'})
 
     post(:login, {
-      :username => @alice.login, 
+      :username => @alice.login,
       :password => 'fakepassword'})
 
     assert !ActionMailer::Base.deliveries.empty?,
@@ -329,7 +363,7 @@ class AccountControllerTest < ActionController::TestCase
     Setting.plugin_redmine_account_policy.update({notify_on_failure: 'off'})
 
     post(:login, {
-      :username => @alice.login, 
+      :username => @alice.login,
       :password => 'fakepassword'})
 
     assert ActionMailer::Base.deliveries.empty?,
@@ -348,7 +382,7 @@ class AccountControllerTest < ActionController::TestCase
     assert !ActionMailer::Base.deliveries.empty?,
       "Should have sent mail after max lockouts reached"
 
-    @to_array << @alice.mail	
+    @to_array << @alice.mail
 
     admins = User.active.select { |u| u.admin? }.map(&:mail)
 
@@ -358,7 +392,7 @@ class AccountControllerTest < ActionController::TestCase
 
     # TODO: Implement mails sent to parents on max fails
     # Below code block will fail this test, so currently turned off
-    # using if false 
+    # using if false
     if false
       @parent = User.find_by_id(@alice.parent_id) if parent_exists?
       @to_array << @parent.mail if @parent
@@ -367,7 +401,7 @@ class AccountControllerTest < ActionController::TestCase
     are_recipients_correct?(@to_array, ActionMailer::Base.deliveries.last)
   end
 
-  # tests that no email is sent to the user 
+  # tests that no email is sent to the user
   # on max fails attempts reached if the setting is off
   test "no_mail_sent_to_user_on_max_fails_if_setting_off" do
     Setting.plugin_redmine_account_policy.update({notify_on_lockout: 'off'})
