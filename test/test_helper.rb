@@ -7,7 +7,7 @@ module TestSetupMethods
     Setting.plugin_redmine_account_policy.update({password_complexity: 0})
     Setting.plugin_redmine_account_policy.update({password_max_age: 0})
     Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
-    Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
+    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 0})
     Setting.plugin_redmine_account_policy.update({password_min_age: 0})
     Setting.plugin_redmine_account_policy.update({account_lockout_duration: 0})
     Setting.plugin_redmine_account_policy.update({account_lockout_threshold: 0})
