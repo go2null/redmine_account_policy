@@ -7,7 +7,7 @@ class AddOldSaltsToUsers < ActiveRecord::Migration
 	# the maximum number of stored passwords (30) + 1   
 	add_column 	:users, 
 	  :old_salts, 
-	  :string, 
+	  :text, 
 	  :null => true,
 	  :limit => ((32*60) * 31)
   end
