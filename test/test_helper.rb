@@ -4,8 +4,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 module TestSetupMethods
   # reset all settings
   def reset_settings
+    # core settings
+    Setting.password_max_age = 0
+
+    # plugin settings
     Setting.plugin_redmine_account_policy.update({password_complexity: 0})
-    Setting.plugin_redmine_account_policy.update({password_max_age: 0})
     Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
     Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 0})
     Setting.plugin_redmine_account_policy.update({password_min_age: 0})
