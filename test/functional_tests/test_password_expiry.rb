@@ -5,6 +5,7 @@ class AccountControllerTest < ActionController::TestCase
   include TestDailyMethods
   include TestHelperMethods
   include TestMailerMethods
+  include PluginSettingsMethods
 
   def setup
     set_mailer_test_variables
@@ -109,7 +110,7 @@ class AccountControllerTest < ActionController::TestCase
 
   # tests that an expiration email is sent when within the threshold
   test "expiration_warn_mails_when_setting_on_and_in_warn_range" do
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 14})
+    set_plugin_setting(:password_expiry_warn_days, 14)
 
     set_expiry_and_warn_vars
 
@@ -129,7 +130,7 @@ class AccountControllerTest < ActionController::TestCase
 
   # tests no expiration mail sent when outside the warn range
   test "expiration_warn_mails_when_setting_on_and_out_of_warn_range" do
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 14})
+    set_plugin_setting(:password_expiry_warn_days, 14)
 
     set_expiry_and_warn_vars
 
@@ -144,7 +145,7 @@ class AccountControllerTest < ActionController::TestCase
 
   # tests that no expiration warning emails are sent when the setting is off
   test "no_expiration_warn_mails_when_setting_off" do
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 0})
+    set_plugin_setting(:password_expiry_warn_days, 0)
 
     @last_changed_date = pwd_date_if_now_expired + 1.days
 
@@ -159,7 +160,7 @@ class AccountControllerTest < ActionController::TestCase
   # tests that there is an expiration warning flash when setting is on and
   # the date is within the warn range
   test "expiration_warn_flash_when_setting_on_and_in_warn_range" do
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 14})
+    set_plugin_setting(:password_expiry_warn_days, 14)
 
     set_expiry_and_warn_vars
 
@@ -176,7 +177,7 @@ class AccountControllerTest < ActionController::TestCase
   # tests that there is no expiration warning flash when setting is on and
   # the date is within the warn range
   test "no_expiration_warn_flash_when_setting_on_and_out_of_warn_range" do
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 14})
+    set_plugin_setting(:password_expiry_warn_days, 14)
 
     set_expiry_and_warn_vars
 
@@ -192,7 +193,7 @@ class AccountControllerTest < ActionController::TestCase
 
   # tests that there is no expiration warning flash when setting is off
   test "no_expiration_warn_flash_when_setting_off" do
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 0})
+    set_plugin_setting(:password_expiry_warn_days, 0)
 
     @last_changed_date = pwd_date_if_now_expired + 1.days
 

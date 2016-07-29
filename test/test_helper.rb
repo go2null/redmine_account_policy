@@ -1,23 +1,26 @@
 # Load the Redmine helper
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
+# Load plugin setting helpers
+require File.expand_path(File.dirname(__FILE__) + '/../lib/redmine_account_policy/plugin_settings_methods')
 
 module TestSetupMethods
+  include PluginSettingsMethods
   # reset all settings
   def reset_settings
     # core settings
     Setting.password_max_age = 0
 
     # plugin settings
-    Setting.plugin_redmine_account_policy.update({password_complexity: 0})
-    Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 0})
-    Setting.plugin_redmine_account_policy.update({password_min_age: 0})
-    Setting.plugin_redmine_account_policy.update({account_lockout_duration: 0})
-    Setting.plugin_redmine_account_policy.update({account_lockout_threshold: 0})
-    Setting.plugin_redmine_account_policy.update({notify_on_failure: 0})
-    Setting.plugin_redmine_account_policy.update({notify_on_lockout: 0})
-    Setting.plugin_redmine_account_policy.update({unused_account_max_age: 0})
-    Setting.plugin_redmine_account_policy.update({account_policy_checked_on: nil })
+    set_plugin_setting(:password_complexity, 0)
+    set_plugin_setting(:password_min_unique, 0)
+    set_plugin_setting(:password_expiry_warn_days, 0)
+    set_plugin_setting(:password_min_age, 0)
+    set_plugin_setting(:account_lockout_duration, 0)
+    set_plugin_setting(:account_lockout_threshold, 0)
+    set_plugin_setting(:notify_on_failure, 0)
+    set_plugin_setting(:notify_on_lockout, 0)
+    set_plugin_setting(:unused_account_max_age, 0)
+    set_plugin_setting(:account_policy_checked_on, nil )
   end
 
   def create_user(login, pwd, email)
@@ -63,7 +66,7 @@ module TestDailyMethods
   include TestSetupMethods
 
   def reset_daily_cron
-    Setting.plugin_redmine_account_policy.update({account_policy_checked_on: nil})
+    set_plugin_setting(:account_policy_checked_on, nil)
   end
 
   # runs whatever task the plugin uses to lock expired users

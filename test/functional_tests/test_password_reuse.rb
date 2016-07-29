@@ -4,6 +4,7 @@ class MyControllerTest < ActionController::TestCase
 
   include TestSetupMethods
   include TestHelperMethods
+  include PluginSettingsMethods
 
   def setup
     # turn off all account policy settings
@@ -28,8 +29,7 @@ class MyControllerTest < ActionController::TestCase
 
     attempt_login(@alice.password)	
 
-    Setting.plugin_redmine_account_policy
-    .update({password_min_unique: 15})
+    set_plugin_setting(:password_min_unique, 15)
 
     num_uniques = Setting.plugin_redmine_account_policy[:password_min_unique].to_i
 
@@ -59,8 +59,7 @@ class MyControllerTest < ActionController::TestCase
 
     attempt_login(@alice.password)	
 
-    Setting.plugin_redmine_account_policy
-    .update({password_min_unique: 1})
+    set_plugin_setting(:password_min_unique, 1)
 
     @number_pw_changes = 10
 
