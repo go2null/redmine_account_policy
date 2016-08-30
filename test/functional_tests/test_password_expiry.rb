@@ -50,7 +50,7 @@ class AccountControllerTest < ActionController::TestCase
 
     run_daily_cron_with_reset
 
-    assert !mock_user.must_change_passwd?,
+    refute mock_user.must_change_passwd?,
       "Should have must_change_passwd set to false #{mock_user.inspect}"
   end
 
@@ -63,7 +63,7 @@ class AccountControllerTest < ActionController::TestCase
 
     run_daily_cron_with_reset
 
-    assert !mock_user.must_change_passwd?,
+    refute mock_user.must_change_passwd?,
       "Expiry off, must_change_passwd should be false #{mock_user.inspect}"
   end
 
@@ -104,7 +104,7 @@ class AccountControllerTest < ActionController::TestCase
 
     run_daily_cron_with_reset
 
-    assert !all_mail_recipients.include?(@alice.mail),
+    refute all_mail_recipients.include?(@alice.mail),
       "User should not be sent email on pwd expiry if setting off"
   end
 
@@ -138,7 +138,7 @@ class AccountControllerTest < ActionController::TestCase
 
     run_daily_cron_with_reset
 
-    assert !all_mail_recipients.include?(@alice.mail),
+    refute all_mail_recipients.include?(@alice.mail),
       'No warn mails sent if out of warn range'
   end
 
@@ -153,7 +153,7 @@ class AccountControllerTest < ActionController::TestCase
 
     run_daily_cron_with_reset
 
-    assert !all_mail_recipients.include?(@alice.mail),
+    refute all_mail_recipients.include?(@alice.mail),
       "User should not be sent warn emails if setting off"
   end
 
@@ -170,7 +170,7 @@ class AccountControllerTest < ActionController::TestCase
 
     attempt_login(@alice.password)
 
-    assert !flash[:warning].blank?,
+    refute flash[:warning].blank?,
       "Warning should be flashed"
   end
 

@@ -74,7 +74,7 @@ class AccountControllerTest < ActionController::TestCase
   test "temporary_lockout_on_max_fails" do
     make_bad_login_attempts_until_one_before(@attempts)
 
-    assert !mock_user.locked?, "Should be unlocked - #{mock_user.inspect}"
+    refute mock_user.locked?, "Should be unlocked - #{mock_user.inspect}"
 
     post(:login, {:username => @alice.login, :password => 'fakepassword'})
 
@@ -92,7 +92,7 @@ class AccountControllerTest < ActionController::TestCase
       :username => @alice.login,
       :password => @alice.password})
 
-    assert !mock_user.locked?,
+    refute mock_user.locked?,
       "Should unlock after lock - #{mock_user.inspect}"
   end
 
@@ -178,12 +178,12 @@ class AccountControllerTest < ActionController::TestCase
       :username => @alice.login,
       :password => @alice.password})
 
-    assert !mock_user.locked?, "Unlocked, reset count - #{mock_user.inspect}"
+    refute mock_user.locked?, "Unlocked, reset count - #{mock_user.inspect}"
 
     # make another set of login fails up to the threshold
     make_bad_login_attempts_until_one_before(@attempts)
 
-    assert !mock_user.locked?, "Still not locked - #{mock_user.inspect}"
+    refute mock_user.locked?, "Still not locked - #{mock_user.inspect}"
   end
 
 
@@ -327,7 +327,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.activate!
 
-    assert !mock_user.locked?,
+    refute mock_user.locked?,
       "Should be unlocked after temp-lock - #{mock_user.inspect}"
   end
 
@@ -339,7 +339,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.activate!
 
-    assert !mock_user.locked?,
+    refute mock_user.locked?,
       "Should be unlocked after admin-lock - #{mock_user.inspect}"
   end
 
@@ -352,8 +352,9 @@ class AccountControllerTest < ActionController::TestCase
       :username => @alice.login,
       :password => 'fakepassword'})
 
-    assert !ActionMailer::Base.deliveries.empty?,
+    refute ActionMailer::Base.deliveries.empty?,
       "Should have sent mail after failed login"
+
     @to_array << @alice.mail
     are_recipients_correct?(@to_array, ActionMailer::Base.deliveries.last)
   end
@@ -380,7 +381,7 @@ class AccountControllerTest < ActionController::TestCase
 
     lockout_mail = ActionMailer::Base.deliveries.last
 
-    assert !ActionMailer::Base.deliveries.empty?,
+    refute ActionMailer::Base.deliveries.empty?,
       "Should have sent mail after max lockouts reached"
 
     @to_array << @alice.mail
@@ -409,9 +410,7 @@ class AccountControllerTest < ActionController::TestCase
 
     make_bad_login_attempts_until_one_before(@attempts + 1)
 
-    lockout_mail = ActionMailer::Base.deliveries.last
-
-    assert !lockout_mail.bcc.include?(@alice.mail)
+    refute all_mail_recipients.include?(@alice.mail)
     "Should not have user as recipient after failed login if setting off"
   end
 end

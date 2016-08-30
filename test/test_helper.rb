@@ -159,8 +159,8 @@ module TestMailerMethods
   # returns a string array of all to, bcc, and cc recipients in
   # the mail deliveries
   def all_mail_recipients
-    recipients = Array.new
-
+    recipients = []
+    return recipients unless ActionMailer::Base.deliveries
     ActionMailer::Base.deliveries.each do |mail|
       mail.to.each do |to|
         recipients << to.to_s
@@ -182,7 +182,8 @@ module TestMailerMethods
 
   # returns an array of all the recipients of an input mail
   def mail_recipients(mail)
-    all_recipients = Array.new
+    all_recipients = []
+    return all_recipients unless mail
     mail.to.each do |to|
       all_recipients << to.to_s
     end
