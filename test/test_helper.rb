@@ -1,20 +1,26 @@
 # Load the Redmine helper
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
+# Load plugin setting helpers
+require File.expand_path(File.dirname(__FILE__) + '/../lib/redmine_account_policy/plugin_settings_methods')
 
 module TestSetupMethods
+  include PluginSettingsMethods
   # reset all settings
   def reset_settings
-    Setting.plugin_redmine_account_policy.update({password_complexity: 0})
-    Setting.plugin_redmine_account_policy.update({password_max_age: 0})
-    Setting.plugin_redmine_account_policy.update({password_min_unique: 0})
-    Setting.plugin_redmine_account_policy.update({password_expiry_warn_days: 0})
-    Setting.plugin_redmine_account_policy.update({password_min_age: 0})
-    Setting.plugin_redmine_account_policy.update({account_lockout_duration: 0})
-    Setting.plugin_redmine_account_policy.update({account_lockout_threshold: 0})
-    Setting.plugin_redmine_account_policy.update({notify_on_failure: 0})
-    Setting.plugin_redmine_account_policy.update({notify_on_lockout: 0})
-    Setting.plugin_redmine_account_policy.update({unused_account_max_age: 0})
-    Setting.plugin_redmine_account_policy.update({account_policy_checked_on: nil })
+    # core settings
+    Setting.password_max_age = 0
+
+    # plugin settings
+    set_plugin_setting(:password_complexity, 0)
+    set_plugin_setting(:password_min_unique, 0)
+    set_plugin_setting(:password_expiry_warn_days, 0)
+    set_plugin_setting(:password_min_age, 0)
+    set_plugin_setting(:account_lockout_duration, 0)
+    set_plugin_setting(:account_lockout_threshold, 0)
+    set_plugin_setting(:notify_on_failure, 0)
+    set_plugin_setting(:notify_on_lockout, 0)
+    set_plugin_setting(:unused_account_max_age, 0)
+    set_plugin_setting(:account_policy_checked_on, nil )
   end
 
   def create_user(login, pwd, email)
@@ -60,7 +66,7 @@ module TestDailyMethods
   include TestSetupMethods
 
   def reset_daily_cron
-    Setting.plugin_redmine_account_policy.update({account_policy_checked_on: nil})
+    set_plugin_setting(:account_policy_checked_on, nil)
   end
 
   # runs whatever task the plugin uses to lock expired users
@@ -153,8 +159,8 @@ module TestMailerMethods
   # returns a string array of all to, bcc, and cc recipients in
   # the mail deliveries
   def all_mail_recipients
-    recipients = Array.new
-
+    recipients = []
+    return recipients unless ActionMailer::Base.deliveries
     ActionMailer::Base.deliveries.each do |mail|
       mail.to.each do |to|
         recipients << to.to_s
@@ -176,7 +182,8 @@ module TestMailerMethods
 
   # returns an array of all the recipients of an input mail
   def mail_recipients(mail)
-    all_recipients = Array.new
+    all_recipients = []
+    return all_recipients unless mail
     mail.to.each do |to|
       all_recipients << to.to_s
     end

@@ -16,9 +16,7 @@
 
 <p><label><%= l(:rap_setting_password_expiry) %></label></p>
 <p>
-	<%= l(:rap_setting_password_max_age) %>
-	<%= number_field_tag 'settings[password_max_age]', @settings[:password_max_age], min: 0, max: 999 %>
-	<%= l(:label_day_plural) %>
+  <%= t(:rap_setting_password_max_age_html, pw_setting: Setting.password_max_age) %>
 </br>
 	<%= l(:rap_setting_password_expiry_warn_a) %>
 	<%= number_field_tag 'settings[password_expiry_warn_days]', @settings[:password_expiry_warn_days], min: 0, max: 999 %>

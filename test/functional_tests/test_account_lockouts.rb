@@ -6,6 +6,7 @@ class AccountControllerTest < ActionController::TestCase
   include TestHelperMethods
   include TestMailerMethods
   include TestDailyMethods
+  include PluginSettingsMethods
 
   def setup
     set_mailer_test_variables
@@ -29,8 +30,8 @@ class AccountControllerTest < ActionController::TestCase
 
     @to_array = Array.new
 
-    Setting.plugin_redmine_account_policy.update({account_lockout_duration: @duration})
-    Setting.plugin_redmine_account_policy.update({account_lockout_threshold: @attempts})
+    set_plugin_setting(:account_lockout_duration, @duration)
+    set_plugin_setting(:account_lockout_threshold, @attempts)
     Setting.lost_password = 1
   end
 
@@ -41,7 +42,7 @@ class AccountControllerTest < ActionController::TestCase
 
   # tests unused account lockout for daily cron
   test "unused_account_lockout_on_daily_cron" do
-    Setting.plugin_redmine_account_policy.update({unused_account_max_age: @max_age})
+    set_plugin_setting(:unused_account_max_age, @max_age)
     last_login_if_unused = Date.today - (@max_age + 1).days
 
     mock_user.update_column(:last_login_on, last_login_if_unused)
@@ -55,7 +56,7 @@ class AccountControllerTest < ActionController::TestCase
 
   # tests that repeated daily crons do not lock unused accounts
   test "repeated_crons_do_not_lock_unused_accounts" do
-    Setting.plugin_redmine_account_policy.update({unused_account_max_age: @max_age})
+    set_plugin_setting(:unused_account_max_age, @max_age)
     last_login_if_unused = Date.today - (@max_age + 1).days
 
     run_daily_cron_with_reset
@@ -73,7 +74,7 @@ class AccountControllerTest < ActionController::TestCase
   test "temporary_lockout_on_max_fails" do
     make_bad_login_attempts_until_one_before(@attempts)
 
-    assert !mock_user.locked?, "Should be unlocked - #{mock_user.inspect}"
+    refute mock_user.locked?, "Should be unlocked - #{mock_user.inspect}"
 
     post(:login, {:username => @alice.login, :password => 'fakepassword'})
 
@@ -91,7 +92,7 @@ class AccountControllerTest < ActionController::TestCase
       :username => @alice.login,
       :password => @alice.password})
 
-    assert !mock_user.locked?,
+    refute mock_user.locked?,
       "Should unlock after lock - #{mock_user.inspect}"
   end
 
@@ -177,12 +178,12 @@ class AccountControllerTest < ActionController::TestCase
       :username => @alice.login,
       :password => @alice.password})
 
-    assert !mock_user.locked?, "Unlocked, reset count - #{mock_user.inspect}"
+    refute mock_user.locked?, "Unlocked, reset count - #{mock_user.inspect}"
 
     # make another set of login fails up to the threshold
     make_bad_login_attempts_until_one_before(@attempts)
 
-    assert !mock_user.locked?, "Still not locked - #{mock_user.inspect}"
+    refute mock_user.locked?, "Still not locked - #{mock_user.inspect}"
   end
 
 
@@ -326,7 +327,7 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.activate!
 
-    assert !mock_user.locked?,
+    refute mock_user.locked?,
       "Should be unlocked after temp-lock - #{mock_user.inspect}"
   end
 
@@ -338,21 +339,22 @@ class AccountControllerTest < ActionController::TestCase
 
     mock_user.activate!
 
-    assert !mock_user.locked?,
+    refute mock_user.locked?,
       "Should be unlocked after admin-lock - #{mock_user.inspect}"
   end
 
   # tests that an email is sent on a failed login attempt
   # if the setting is set
   test "mail_sent_on_bad_signin_if_setting_on" do
-    Setting.plugin_redmine_account_policy.update({notify_on_failure: 'on'})
+    set_plugin_setting(:notify_on_failure, 'on')
 
     post(:login, {
       :username => @alice.login,
       :password => 'fakepassword'})
 
-    assert !ActionMailer::Base.deliveries.empty?,
+    refute ActionMailer::Base.deliveries.empty?,
       "Should have sent mail after failed login"
+
     @to_array << @alice.mail
     are_recipients_correct?(@to_array, ActionMailer::Base.deliveries.last)
   end
@@ -360,7 +362,7 @@ class AccountControllerTest < ActionController::TestCase
   # tests that no email is sent on a failed login attempt
   # if the setting is off
   test "no_mail_sent_on_bad_signin_if_setting_off" do
-    Setting.plugin_redmine_account_policy.update({notify_on_failure: 'off'})
+    set_plugin_setting(:notify_on_failure, 'off')
 
     post(:login, {
       :username => @alice.login,
@@ -373,13 +375,13 @@ class AccountControllerTest < ActionController::TestCase
   # tests that an email is sent to the user and admins
   # on max fails attempts reached if the setting is set
   test "mail_sent_to_user_on_max_fails_if_setting_on" do
-    Setting.plugin_redmine_account_policy.update({notify_on_lockout: 'on'})
+    set_plugin_setting(:notify_on_lockout, 'on')
 
     make_bad_login_attempts_until_one_before(@attempts + 1)
 
     lockout_mail = ActionMailer::Base.deliveries.last
 
-    assert !ActionMailer::Base.deliveries.empty?,
+    refute ActionMailer::Base.deliveries.empty?,
       "Should have sent mail after max lockouts reached"
 
     @to_array << @alice.mail
@@ -404,13 +406,11 @@ class AccountControllerTest < ActionController::TestCase
   # tests that no email is sent to the user
   # on max fails attempts reached if the setting is off
   test "no_mail_sent_to_user_on_max_fails_if_setting_off" do
-    Setting.plugin_redmine_account_policy.update({notify_on_lockout: 'off'})
+    set_plugin_setting(:notify_on_lockout, 'off')
 
     make_bad_login_attempts_until_one_before(@attempts + 1)
 
-    lockout_mail = ActionMailer::Base.deliveries.last
-
-    assert !lockout_mail.bcc.include?(@alice.mail)
+    refute all_mail_recipients.include?(@alice.mail)
     "Should not have user as recipient after failed login if setting off"
   end
 end

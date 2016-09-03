@@ -1,3 +1,5 @@
+require File.expand_path(File.dirname(__FILE__) + '/plugin_settings_methods')
+
 module RedmineAccountPolicy
   module Patches
     module AccountControllerPatch
@@ -9,6 +11,7 @@ module RedmineAccountPolicy
       end
 
       module DailyCronMethods
+        include PluginSettingsMethods
         def run_account_policy_daily_tasks
           Rails.logger.info { "#{Time.now.utc}: Account Policy: Running daily tasks" }
 
@@ -17,7 +20,7 @@ module RedmineAccountPolicy
           purge_expired_invalid_credentials # failed logins
           send_expiration_warnings          # expiration warnings	
 
-          Setting.plugin_redmine_account_policy.update({account_policy_checked_on: Date.today.strftime("%Y-%m-%d")})
+          set_plugin_setting(:account_policy_checked_on, Date.today.strftime("%Y-%m-%d"))
         end
 
         # enable must_change_passwd for all expired users.
@@ -54,7 +57,7 @@ module RedmineAccountPolicy
         end
 
         def send_expiration_warnings
-          @password_max_age = Setting.plugin_redmine_account_policy[:password_max_age].to_i.days  	
+          @password_max_age = Setting.password_max_age.to_i.days
 
           @warn_threshold = Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i 
 
@@ -232,7 +235,7 @@ module RedmineAccountPolicy
     def successful_authentication_with_account_policy(user)
       successful_authentication_without_account_policy(user)
 
-      @password_max_age = Setting.plugin_redmine_account_policy[:password_max_age].to_i.days  	
+      @password_max_age = Setting.password_max_age.to_i.days
       warn_threshold = Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i
 
       if days_before_expiry(user) <= warn_threshold && days_before_expiry(user) > 0

@@ -4,6 +4,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class MyControllerTest < ActionController::TestCase
   include TestHelperMethods
   include TestSetupMethods
+  include PluginSettingsMethods
 
   def setup
     # turn off all account policy settings
@@ -50,7 +51,7 @@ class MyControllerTest < ActionController::TestCase
   end
 
   def pass_test_for_setting(int)
-    Setting.plugin_redmine_account_policy.update({password_complexity: int})
+    set_plugin_setting(:password_complexity, int)
 
     try_to_change_password_to(@test_new_password)
     assert_redirected_to my_account_path,
@@ -60,7 +61,7 @@ class MyControllerTest < ActionController::TestCase
   end
 
   def fail_test_for_setting(int)
-    Setting.plugin_redmine_account_policy.update({password_complexity: int})
+    set_plugin_setting(:password_complexity, int)
 
     try_to_change_password_to(@test_new_password)
     assert_response :success,
