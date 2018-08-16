@@ -314,9 +314,7 @@ module RedmineAccountPolicy
     end
 
     def flash_failure(counter)
-      flash.now[:error] = "#{l(:notice_account_invalid_creditentials)}."                       \
-        " #{Setting.plugin_redmine_account_policy[:account_lockout_threshold].to_i - counter}" \
-        " #{l(:rap_notice_invalid_logins_remaining)}"
+      flash.now[:error] = "#{l(:notice_account_invalid_credentials)}. #{l(:rap_notice_invalid_logins_remaining, trials_left: Setting.plugin_redmine_account_policy['account_lockout_threshold'].to_i - counter)}"
     end
 
     def flash_lockout(username)

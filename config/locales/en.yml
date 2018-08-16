@@ -43,7 +43,7 @@ en:
   rap_setting_invalid_logins_c:       'unsuccessful login attempts'
   rap_setting_notify_on_failure:      'Notify user on every failed login'
   rap_setting_notify_on_lockout:      'Users and Administrators are always notified when an account is locked out.'
-  rap_notice_invalid_logins_remaining: 'attempts remaining.'
+  rap_notice_invalid_logins_remaining: '%{trials_left} attempts remaining.'
 
   rap_notice_account_lockout:         'Your account has been locked due to too many login attempts. Please wait for '
 
