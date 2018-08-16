@@ -39,7 +39,7 @@ module RedmineAccountPolicy
 
         # TODO: should be in, for example, an ApplicationPatch module
         def password_max_age
-          Setting.plugin_redmine_account_policy['password_max_age'].to_i
+          Setting.password_max_age.to_i
         end
 
         # TODO: should be in, for example, an ApplicationPatch module

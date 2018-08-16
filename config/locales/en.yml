@@ -15,7 +15,7 @@ en:
 
     # == password expiry == #
   rap_setting_password_expiry:        'Password Expiry'
-  rap_setting_password_max_age:       'Maximum password age'
+  rap_setting_password_max_age_html:  'From your Settings -> Authentication tab, passwords expire in <b>%{pw_setting}</b> days'
   rap_setting_password_expiry_warn_a: 'Email warning notifications start'
   rap_setting_password_expiry_warn_b: 'before password expiration'
   rap_notice_password_expired:        'Your password has expired.'

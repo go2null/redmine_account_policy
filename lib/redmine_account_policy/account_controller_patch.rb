@@ -54,7 +54,7 @@ module RedmineAccountPolicy
         end
 
         def send_expiration_warnings
-          @password_max_age = Setting.plugin_redmine_account_policy['password_max_age'].to_i.days  	
+          @password_max_age = Setting.password_max_age.to_i.days  	
 
           @warn_threshold = Setting.plugin_redmine_account_policy['password_expiry_warn_days'].to_i 
 
@@ -231,7 +231,7 @@ module RedmineAccountPolicy
     def successful_authentication_with_account_policy(user)
       successful_authentication_without_account_policy(user)
 
-      @password_max_age = Setting.plugin_redmine_account_policy['password_max_age'].to_i.days  	
+      @password_max_age = Setting.password_max_age.to_i.days  	
       warn_threshold = Setting.plugin_redmine_account_policy['password_expiry_warn_days'].to_i
 
       if days_before_expiry(user) <= warn_threshold && days_before_expiry(user) > 0

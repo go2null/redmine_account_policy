@@ -15,7 +15,7 @@ pl:
 
     # == password expiry == #
   rap_setting_password_expiry:        'Wygasanie hasła'
-  rap_setting_password_max_age:       'Maksymalny wiek hasła'
+  rap_setting_password_max_age_html:  'Z zakładki Ustawienia -> Uwierzytelnianie, hasła wygasają w ciągu <b>%{pw_setting}</b> dni'
   rap_setting_password_expiry_warn_a: 'Ostrzeżenie e-mailowe jest wysyłane na '
   rap_setting_password_expiry_warn_b: 'przed wygaśnięciem hasła'
   rap_notice_password_expired:        'Twoje hasło wygasło.'
