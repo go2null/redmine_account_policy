@@ -16,7 +16,7 @@ module RedminePasswordPolicy
         def password_with_account_policy
           # set minimum unique passwords and user
           @min_uniques = Setting
-          .plugin_redmine_account_policy[:password_min_unique]
+          .plugin_redmine_account_policy['password_min_unique']
           .to_i	
 
           @user = User.current
