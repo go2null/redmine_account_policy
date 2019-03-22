@@ -5,11 +5,14 @@ module RedmineAccountPolicy
       def self.included(base)
         base.send(:include, InstanceMethods)
         # == password complexity == #
-        base.alias_method_chain :validate_password_length, :account_policy
+        base.alias_method :validate_password_length_without_account_policy, :validate_password_length
+        base.alias_method :validate_password_length, :validate_password_length_with_account_policy
         # == password reuse == #
-        base.alias_method_chain :change_password_allowed?, :account_policy
+        base.alias_method :change_password_allowed_without_account_policy?, :change_password_allowed?
+        base.alias_method :change_password_allowed?, :change_password_allowed_with_account_policy?
         # == login fails == #
-        base.alias_method_chain :active?, :account_policy
+        base.alias_method :active_without_account_policy?, :active?
+        base.alias_method :active?, :active_with_account_policy?
       end
 
       module InstanceMethods
