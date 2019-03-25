@@ -101,11 +101,16 @@ module RedmineAccountPolicy
 
   module InvalidCredentialsMethods
     def self.included(base)
-      base.alias_method_chain :lost_password, :account_policy
-      base.alias_method_chain :password_authentication, :account_policy
-      base.alias_method_chain :invalid_credentials, :account_policy
-      base.alias_method_chain :account_locked, :account_policy
-      base.alias_method_chain :successful_authentication, :account_policy
+      base.alias_method :lost_password_without_account_policy, :lost_password
+      base.alias_method :lost_password, :lost_password_with_account_policy
+      base.alias_method :password_authentication_without_account_policy, :password_authentication
+      base.alias_method :password_authentication, :password_authentication_with_account_policy
+      base.alias_method :invalid_credentials_without_account_policy, :invalid_credentials
+      base.alias_method :invalid_credentials, :invalid_credentials_with_account_policy
+      base.alias_method :account_locked_without_account_policy, :account_locked
+      base.alias_method :account_locked, :account_locked_with_account_policy
+      base.alias_method :successful_authentication_without_account_policy, :successful_authentication
+      base.alias_method :successful_authentication, :successful_authentication_with_account_policy
     end
 
     # on all post requests (whether user is nonexistent, locked, or otherwise),

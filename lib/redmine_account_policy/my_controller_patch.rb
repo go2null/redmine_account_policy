@@ -6,7 +6,8 @@ module RedminePasswordPolicy
         base.send(:include, InstanceMethods)
 
         #  Wrap the methods we are extending
-        base.alias_method_chain :password, :account_policy
+        base.alias_method :password_without_account_policy, :password
+        base.alias_method :password, :password_with_account_policy
       end
 
       module InstanceMethods

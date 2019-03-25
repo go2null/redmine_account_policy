@@ -1,4 +1,4 @@
-class AddOldSaltsToUsers < ActiveRecord::Migration
+class AddOldSaltsToUsers < ActiveRecord::Migration[5.0]
   def change
 	# setting the size of the column to the size of the salt (32)
 	# multipled by double the maximum number of stored passwords (60)
