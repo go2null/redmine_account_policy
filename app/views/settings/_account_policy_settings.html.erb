@@ -4,7 +4,7 @@
 
 <p>
 	<%= l(:rap_setting_password_complexity_a) %>
-    <%= select_tag 'settings[password_complexity]', options_for_select([0,1,2,3,4], @settings[:password_complexity]) %>
+    <%= select_tag 'settings[password_complexity]', options_for_select([0,1,2,3,4], @settings['password_complexity']) %>
 	<%= l(:rap_setting_password_complexity_b) %>
 	</br>
 	<%= l(:rap_setting_password_upper_case)   %></br>
@@ -16,12 +16,10 @@
 
 <p><label><%= l(:rap_setting_password_expiry) %></label></p>
 <p>
-	<%= l(:rap_setting_password_max_age) %>
-	<%= number_field_tag 'settings[password_max_age]', @settings[:password_max_age], min: 0, max: 999 %>
-	<%= l(:label_day_plural) %>
+	<%= t(:rap_setting_password_max_age_html, pw_setting: Setting.password_max_age) %>
 </br>
 	<%= l(:rap_setting_password_expiry_warn_a) %>
-	<%= number_field_tag 'settings[password_expiry_warn_days]', @settings[:password_expiry_warn_days], min: 0, max: 999 %>
+	<%= number_field_tag 'settings[password_expiry_warn_days]', @settings['password_expiry_warn_days'], min: 0, max: 999 %>
 	<%= l(:label_day_plural) %>
 	<%= l(:rap_setting_password_expiry_warn_b) %>
 </p>
@@ -30,12 +28,12 @@
 <p><label><%= l(:rap_setting_password_reuse) %></label></p>
 <p>
 	<%= l(:rap_setting_password_min_unique_a) %>
-	<%= number_field_tag 'settings[password_min_unique]', @settings[:password_min_unique], min: 1, max: 30%>
+	<%= number_field_tag 'settings[password_min_unique]', @settings['password_min_unique'], min: 1, max: 30%>
 	<%= l(:rap_setting_password_min_unique_b) %>
 </p>
 <p>
 	<%= l(:rap_setting_password_min_age) %>
-	<%= number_field_tag 'settings[password_min_age]', @settings[:password_min_age], min: 0, max: 999 %>
+	<%= number_field_tag 'settings[password_min_age]', @settings['password_min_age'], min: 0, max: 999 %>
 	<%= l(:label_day_plural) %>
 </p>
 
@@ -43,13 +41,13 @@
 <p><label><%= l(:rap_setting_invalid_logins) %></label></p>
 <p>
 	<%= l(:rap_setting_invalid_logins_a) %>
-	<%= number_field_tag 'settings[account_lockout_duration]', @settings[:account_lockout_duration], min: 0, max: 999 %>
+	<%= number_field_tag 'settings[account_lockout_duration]', @settings['account_lockout_duration'], min: 0, max: 999 %>
 	<%= l(:rap_setting_invalid_logins_b) %>
-	<%= number_field_tag 'settings[account_lockout_threshold]', @settings[:account_lockout_threshold], min: 0, max: 99 %>
+	<%= number_field_tag 'settings[account_lockout_threshold]', @settings['account_lockout_threshold'], min: 0, max: 99 %>
 	<%= l(:rap_setting_invalid_logins_c) %>
 </p>
 <p>
-	<%= check_box_tag 'settings[notify_on_failure]', params[:notify_on_failure], @settings[:notify_on_failure] %>
+	<%= check_box_tag 'settings[notify_on_failure]', params['notify_on_failure'], @settings['notify_on_failure'] %>
 	<%= l(:rap_setting_notify_on_failure) %>
 </p>
 <p><em class="info"><%= l(:rap_setting_notify_on_lockout) %></em></p>
@@ -58,12 +56,12 @@
 <p><label><%= l(:rap_setting_unused_account) %></label></p>
 <p>
 	<%= l(:rap_setting_unused_account_max_age) %>
-	<%= number_field_tag 'settings[unused_account_max_age]', @settings[:unused_account_max_age], min: 0, max: 99 %>
+	<%= number_field_tag 'settings[unused_account_max_age]', @settings['unused_account_max_age'], min: 0, max: 99 %>
 	<%= l(:label_day_plural) %>
 </p>
 
 
 <p>
 	<label><%= l(:rap_setting_account_policy_checked_on) %></label>
-	<%= text_field_tag('settings[account_policy_checked_on]', Setting.plugin_redmine_account_policy[:account_policy_checked_on], readonly: true, style: 'text-align: center;color:#5f5f5f;border:transparent')%>
+	<%= text_field_tag('settings[account_policy_checked_on]', Setting.plugin_redmine_account_policy['account_policy_checked_on'], readonly: true, style: 'text-align: center;color:#5f5f5f;border:transparent')%>
 </p>

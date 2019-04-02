@@ -16,7 +16,7 @@ Redmine::Plugin.register :redmine_account_policy do
   author      'go2null'
   author_url  'https://github.com/go2null'
 
-  version     '0.2.0'
+  version     '0.3.0'
   requires_redmine :version_or_higher => '2.6.0'
 
   settings :default => {

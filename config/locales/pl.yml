@@ -1,0 +1,71 @@
+# Polish strings go here for Rails i18n
+pl:
+  rap_setting_warn_description:       'Reguły haseł nie będą zachowywały się poprawnie, jeśli nie jest ustawione wymaganie zalogowania w ustawieniach Redmine, zakładka Uwierzytelnianie!'
+    # == password complexity == #
+  rap_setting_password_complexity:    'Złożoność hasła'
+  rap_setting_password_complexity_a:  'Hasła muszą zawierać co najmniej'
+  rap_setting_password_complexity_b:  'znaków z następujących klas'
+  rap_setting_password_upper_case:    '* Duże litery (A-Z)'
+  rap_setting_password_lower_case:    '* Małe litery (a-z)'
+  rap_setting_password_numerical:     '* Liczby (0-9)'
+  rap_setting_password_non_alphanum:  '* Znaki specjalne (!$#,)'
+
+  rap_error_password_complexity:      'Hasło musi składać się z małych i wielkich liter oraz zawierać co najmniej jedną cyfrę i jeden znak specjalny'
+
+
+    # == password expiry == #
+  rap_setting_password_expiry:        'Wygasanie hasła'
+  rap_setting_password_max_age_html:  'Z zakładki Ustawienia -> Uwierzytelnianie, hasła wygasają w ciągu <b>%{pw_setting}</b> dni'
+  rap_setting_password_expiry_warn_a: 'Ostrzeżenie e-mailowe jest wysyłane na '
+  rap_setting_password_expiry_warn_b: 'przed wygaśnięciem hasła'
+  rap_notice_password_expired:        'Twoje hasło wygasło.'
+
+  rap_mail_subject_warn_expiry:       'Ostrzeżenie - haslo wygaśnie za %{days_left} dni'
+  rap_mail_body_warn_expiry_header:   'Ostrzeżenie o wygaśnięciu hasła'
+  rap_mail_body_warn_expiry:          'Hasło dla konta "%{name}" [%{login}] wygaśnie w ciągu %{days_left} dni. Proszę o zalogowanie się i zmianę hasła przed tym momentem.' 
+
+  rap_mail_subject_is_expired:       'Hasło wygasło'
+  rap_mail_body_is_expired_header:   'Informacja o wygaśnięciu hasła'
+  rap_mail_body_is_expired:          'Hasło do konta "%{name}" [%{login}] wygasło.' 
+
+    # == password reuse == #
+  rap_setting_password_reuse:         'Ponowne użycie hasła'
+  rap_notice_password_reuse:          'Nowe hasło musi być różne od ostatnich %{min_unique} haseł'
+  rap_setting_password_min_age:       'Zapobiegaj zmianie hasła przed upłynięciem'
+  rap_setting_password_min_unique_a:  'Upewnij się, że ostatnie'
+  rap_setting_password_min_unique_b:  'haseł jest unikalne'
+
+
+    # == invalid logins lockout == #
+  rap_setting_invalid_logins:         'Nieprawidłowe próby logowania'
+  rap_setting_invalid_logins_a:       'Zablokuj konto na'
+  rap_setting_invalid_logins_b:       'minut po'
+  rap_setting_invalid_logins_c:       'nieudanych próbach logowania'
+  rap_setting_notify_on_failure:      'Powiadamiaj użytkownika o każdej nieudanej próbie logowania'
+  rap_setting_notify_on_lockout:      'Użytkownicy i administratorzy są zawsze powiadamiani, kiedy konto zostanie zablokowane.'
+  rap_notice_invalid_logins_remaining: 'Liczba pozostałych prób logowania: %{trials_left}'
+
+  rap_notice_account_lockout:         'Konto zostało zablokowane z powodu zbyt wielu nieudanych prób logowania. Poczekaj przez '
+
+  rap_alt_change_passwords_not_allowed:  'Nie możesz zmieniać hasła w przeciągu %{time_of_lockout_in_hours} godzin od ostatniej zmiany'
+
+  rap_mail_subject_login_failure:     'Nieudana próba logowania'
+  rap_mail_subject_login_lockout:     'Osiągnięto limit nieudanych prób logowania - konto tymczasowo zablokowane'
+  rap_mail_body_login_failure_header: 'Nieudana próba logowania'
+  rap_mail_body_login_lockout_header: 'Osiągniecie limitu nieudanych prób logowania'
+  rap_mail_body_login_failure:        'Została dokonana nieudana próba logowania na Twoje konto z adresu IP %{ip_address}.'
+  rap_mail_body_login_lockout:        'Twoje konto "%{name}" [%{login}] osiągnęło limit dozwolonych prób nieudanego logowania.  Ostatnia próba była przeprowadzona z adresu IP %{ip_address}. Twoje konto będzie zablokowane przez %{lockout_duration} minut.'
+
+  rap_account_locked_due_to_account_policy: 'Odblokuj (zablokowane tymczasowo)'
+  rap_alt_account_locked_due_to_account_policy: 'To konto zostało zablokowane z powodu osiągnięcie limitu nieudanych prób logowania. Aby zablokować to konto tak, aby użytkownik nie mógł go samodzielnie odblokować po upływie czasu tymczasowej blokady należy konto odblokować i ponownie zablokować.'
+
+
+    # == unused accounts == #
+  rap_setting_unused_account:         'Nieużywane/martwe konta'
+  rap_setting_unused_account_max_age: 'Deaktywuj konta nieużywane przez'
+
+
+    # == daily cron == #
+  rap_setting_account_policy_checked_on: 'Polityka kont ostatnio sprawdzana w dniu'
+
+  notice_account_lost_email_sent:        'Zostanie wysłany e-mail z instrukcjami do ustawienia nowego hasła, jeśli konto istnieje i nie jest zablokowane.' 

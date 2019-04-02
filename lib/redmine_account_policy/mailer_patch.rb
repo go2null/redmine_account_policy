@@ -14,7 +14,7 @@ module RedmineAccountPolicy
         end
 
         def notify_account_lockout(user, ip_address)
-          notify_user = Setting.plugin_redmine_account_policy[:notify_on_lockout]
+          notify_user = Setting.plugin_redmine_account_policy['notify_on_lockout']
           set_instance_variables(user, ip_address)
 
           recipients = User.active.select { |u| u.admin? }.map(&:mail)
