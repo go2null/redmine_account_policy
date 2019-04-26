@@ -30,7 +30,7 @@ module RedmineAccountPolicy
             if !complex_enough?(password)
               errors.add(:base, 
                          l(:rap_error_password_complexity, 
-                           complexity: Setting.plugin_redmine_account_policy[:password_complexity])) 
+                           complexity: Setting.plugin_redmine_account_policy['password_complexity'])) 
             end
           end		
         end
@@ -40,7 +40,7 @@ module RedmineAccountPolicy
 
         # TODO: should be in, for example, an ApplicationPatch module
         def password_max_age
-          Setting.plugin_redmine_account_policy[:password_max_age].to_i
+          Setting.plugin_redmine_account_policy['password_max_age'].to_i
         end
 
         # TODO: should be in, for example, an ApplicationPatch module
@@ -71,7 +71,7 @@ module RedmineAccountPolicy
         # == password reuse == #
 
         def change_password_allowed_with_account_policy?
-          min_age = Setting.plugin_redmine_account_policy[:password_min_age].to_i
+          min_age = Setting.plugin_redmine_account_policy['password_min_age'].to_i
           unless passwd_changed_on.blank?
             return false if passwd_changed_on > (Time.zone.now - min_age.days)
           end
@@ -83,7 +83,7 @@ module RedmineAccountPolicy
 
         # TODO: should be in, for example, an ApplicationPatch module
         def unused_account_max_age
-          Setting.plugin_redmine_account_policy[:unused_account_max_age].to_i
+          Setting.plugin_redmine_account_policy['unused_account_max_age'].to_i
         end
 
         # TODO: should be in, for example, an ApplicationPatch module
@@ -100,7 +100,7 @@ module RedmineAccountPolicy
         private
 
         def complex_enough?(password)
-          complexity = Setting.plugin_redmine_account_policy[:password_complexity].to_i
+          complexity = Setting.plugin_redmine_account_policy['password_complexity'].to_i
           return true if complexity == 0
 
           count = 0
