@@ -44,7 +44,7 @@ module RedmineAccountPolicy
         #	Non-existent usernames are allowed to avoid exposing valid usernames
         #   (by having a different error message).
         def purge_expired_invalid_credentials
-          seconds = Setting.plugin_redmine_account_policy[:account_lockout_duration].to_i.minutes
+          seconds = Setting.plugin_redmine_account_policy['account_lockout_duration'].to_i.minutes
 
           # added brackets around conditional, seems to resolve issue thrown
           # where method 'round method of class nil:NilClass" is being called
@@ -54,9 +54,9 @@ module RedmineAccountPolicy
         end
 
         def send_expiration_warnings
-          @password_max_age = Setting.plugin_redmine_account_policy[:password_max_age].to_i.days  	
+          @password_max_age = Setting.plugin_redmine_account_policy['password_max_age'].to_i.days  	
 
-          @warn_threshold = Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i 
+          @warn_threshold = Setting.plugin_redmine_account_policy['password_expiry_warn_days'].to_i 
 
           # only run on unlocked users
           User.where(type: 'User', status: [User::STATUS_REGISTERED, User::STATUS_ACTIVE]).each do |user|
@@ -71,7 +71,7 @@ module RedmineAccountPolicy
         end
 
         def send_warning_password_expiry_mail(user)
-          return unless Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i > 0 
+          return unless Setting.plugin_redmine_account_policy['password_expiry_warn_days'].to_i > 0 
 
           Mailer.notify_password_warn_expiry(user, 
                                              days_before_expiry(user)
@@ -87,7 +87,7 @@ module RedmineAccountPolicy
         end
 
         def already_ran_today?
-          last_run = Setting.plugin_redmine_account_policy[:account_policy_checked_on]
+          last_run = Setting.plugin_redmine_account_policy['account_policy_checked_on']
           last_run == Date.today.strftime("%Y-%m-%d") ? true : false
         end
 
@@ -133,7 +133,7 @@ module RedmineAccountPolicy
     def password_authentication_with_account_policy
       user = User.try_to_login(params[:username], params[:password], false)
       user_from_login = User.where("login = ?", params[:username]).first
-      @seconds = Setting.plugin_redmine_account_policy[:account_lockout_duration].to_i.minutes
+      @seconds = Setting.plugin_redmine_account_policy['account_lockout_duration'].to_i.minutes
       counter = $invalid_credentials_cache[params[:username]]
 
       # if the user is locked but not due to the plugin, delete them from the cache (this would only occur 
@@ -170,7 +170,7 @@ module RedmineAccountPolicy
     # and users can be timed out on maximum fails reached
     def invalid_credentials_with_account_policy
       username = params[:username].downcase
-      lockout_duration = Setting.plugin_redmine_account_policy[:account_lockout_duration].to_i
+      lockout_duration = Setting.plugin_redmine_account_policy['account_lockout_duration'].to_i
       user_from_login = User.where("login = ?", params[:username]).first
       counter = $invalid_credentials_cache[username]
 
@@ -216,7 +216,7 @@ module RedmineAccountPolicy
           else
             # is counter, not a Time
             counter += 1
-            if counter >= Setting.plugin_redmine_account_policy[:account_lockout_threshold].to_i
+            if counter >= Setting.plugin_redmine_account_policy['account_lockout_threshold'].to_i
               user_from_login.lock! if user_from_login
               warn_lockout_starts(username)
             else
@@ -232,7 +232,7 @@ module RedmineAccountPolicy
     def successful_authentication_with_account_policy(user)
       successful_authentication_without_account_policy(user)
 
-      @password_max_age = Setting.plugin_redmine_account_policy[:password_max_age].to_i.days  	
+      @password_max_age = Setting.plugin_redmine_account_policy['password_max_age'].to_i.days  	
       warn_threshold = Setting.plugin_redmine_account_policy[:password_expiry_warn_days].to_i
 
       if days_before_expiry(user) <= warn_threshold && days_before_expiry(user) > 0
@@ -315,7 +315,7 @@ module RedmineAccountPolicy
 
     def flash_failure(counter)
       flash.now[:error] = "#{l(:notice_account_invalid_creditentials)}."                       \
-        " #{Setting.plugin_redmine_account_policy[:account_lockout_threshold].to_i - counter}" \
+        " #{Setting.plugin_redmine_account_policy['account_lockout_threshold'].to_i - counter}" \
         " #{l(:rap_notice_invalid_logins_remaining)}"
     end
 
@@ -326,7 +326,7 @@ module RedmineAccountPolicy
     end
 
     def send_failure_mail(username)
-      return unless Setting.plugin_redmine_account_policy[:notify_on_failure] == 'on'
+      return unless Setting.plugin_redmine_account_policy['notify_on_failure'] == 'on'
 
       user = User.find_by_login(username)
       Mailer.notify_login_failure(user, request.remote_ip).deliver unless user.nil?

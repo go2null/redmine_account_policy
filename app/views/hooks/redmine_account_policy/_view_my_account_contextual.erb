@@ -1,2 +1,2 @@
 
-<%=content_tag(:span, l(:button_change_password), :style => "color:gray", :class=>"icon icon-passwd", :title => l(:rap_alt_change_passwords_not_allowed, time_of_lockout_in_hours: (Setting.plugin_redmine_account_policy[:password_min_age].to_i * 24).to_s)) unless @user.change_password_allowed? %>
+<%=content_tag(:span, l(:button_change_password), :style => "color:gray", :class=>"icon icon-passwd", :title => l(:rap_alt_change_passwords_not_allowed, time_of_lockout_in_hours: (Setting.plugin_redmine_account_policy['password_min_age'].to_i * 24).to_s)) unless @user.change_password_allowed? %>
